@@ -1,0 +1,569 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NERON+ Rentabilidad</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600&display=swap">
+
+<style>
+:root {
+  --bg:#09162A; --bg-card:#0E1F38; --bg-inset:#060F1E; --bg-hover:#13284A;
+  --accent:#FF5500; --accent-g:rgba(255,85,0,.18);
+  --profit:#00CC88; --profit-d:rgba(0,204,136,.12);
+  --c-ml:#3EADD4; --c-op:#F5A623; --c-sal:#A78BFA;
+  --tx1:#EEF3F9; --tx2:#8DAABF; --tx3:#4A6880;
+  --bd:rgba(255,255,255,.08); --bd2:rgba(255,255,255,.12);
+  --sh:0 2px 16px rgba(0,0,0,.4);
+  --r:12px; --r2:8px;
+  --fd:'Barlow Condensed',sans-serif; --fb:'Outfit',sans-serif;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#EBF0F7; --bg-card:#FFF; --bg-inset:#DDE5EF; --bg-hover:#F0F5FA;
+  --accent:#D44400; --accent-g:rgba(212,68,0,.12);
+  --profit:#007A50; --profit-d:rgba(0,122,80,.10);
+  --c-ml:#1A7899; --c-op:#B07800; --c-sal:#7C5CDD;
+  --tx1:#081320; --tx2:#3A5570; --tx3:#7090AA;
+  --bd:rgba(0,0,0,.08); --bd2:rgba(0,0,0,.13); --sh:0 2px 12px rgba(0,0,0,.10);
+}}
+:root[data-theme="dark"]{--bg:#09162A;--bg-card:#0E1F38;--bg-inset:#060F1E;--bg-hover:#13284A;--accent:#FF5500;--accent-g:rgba(255,85,0,.18);--profit:#00CC88;--profit-d:rgba(0,204,136,.12);--c-ml:#3EADD4;--c-op:#F5A623;--c-sal:#A78BFA;--tx1:#EEF3F9;--tx2:#8DAABF;--tx3:#4A6880;--bd:rgba(255,255,255,.08);--bd2:rgba(255,255,255,.12);--sh:0 2px 16px rgba(0,0,0,.4);}
+:root[data-theme="light"]{--bg:#EBF0F7;--bg-card:#FFF;--bg-inset:#DDE5EF;--bg-hover:#F0F5FA;--accent:#D44400;--accent-g:rgba(212,68,0,.12);--profit:#007A50;--profit-d:rgba(0,122,80,.10);--c-ml:#1A7899;--c-op:#B07800;--c-sal:#7C5CDD;--tx1:#081320;--tx2:#3A5570;--tx3:#7090AA;--bd:rgba(0,0,0,.08);--bd2:rgba(0,0,0,.13);--sh:0 2px 12px rgba(0,0,0,.10);}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--fb);background:var(--bg);color:var(--tx1);line-height:1.5;padding:0 20px 56px;}
+.wrap{max-width:1080px;margin:0 auto;}
+
+/* HEADER */
+.hdr{padding:26px 0 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--bd);margin-bottom:24px;}
+.hdr-brand{display:flex;align-items:baseline;gap:10px;}
+.hdr-logo{font-family:var(--fd);font-size:26px;font-weight:900;letter-spacing:.03em;}
+.hdr-logo em{color:var(--accent);font-style:normal;}
+.hdr-sub{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);}
+
+/* PERIOD TABS */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;}
+.tab{
+  padding:7px 16px;border-radius:100px;border:1px solid var(--bd2);
+  background:transparent;color:var(--tx2);font-family:var(--fb);font-size:13px;
+  font-weight:500;cursor:pointer;transition:all .18s;white-space:nowrap;
+}
+.tab:hover{background:var(--bg-hover);color:var(--tx1);}
+.tab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.tab.all.active{background:var(--bg-card);border-color:var(--bd2);color:var(--tx1);}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;}
+@media(max-width:780px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:440px){.kpi-grid{grid-template-columns:1fr;}}
+.kpi{background:var(--bg-card);border:1px solid var(--bd2);border-radius:var(--r);padding:17px 16px 17px 20px;box-shadow:var(--sh);position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--_c,var(--bd));border-radius:var(--r) 0 0 var(--r);}
+.kpi-lbl{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--tx3);margin-bottom:7px;}
+.kpi-val{font-family:var(--fd);font-size:29px;font-weight:800;color:var(--tx1);line-height:1;font-variant-numeric:tabular-nums;margin-bottom:4px;}
+.kpi-sub{font-size:11px;color:var(--tx3);}
+.kpi-net{--_c:var(--accent);} .kpi-net .kpi-val{color:var(--accent);}
+.kpi-rev{--_c:var(--profit);}
+.kpi-gan{--_c:var(--c-op);}
+.kpi-exp{--_c:var(--c-ml);}
+
+/* CARD */
+.card{background:var(--bg-card);border:1px solid var(--bd2);border-radius:var(--r);padding:20px;box-shadow:var(--sh);margin-bottom:16px;}
+.card-hdr{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.card-ttl{font-family:var(--fd);font-size:17px;font-weight:700;letter-spacing:.01em;color:var(--tx1);}
+.card-note{font-size:11px;color:var(--tx3);}
+.chart-box{position:relative;height:260px;}
+.chart-sm{position:relative;height:210px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+@media(max-width:680px){.two-col{grid-template-columns:1fr;}}
+
+/* CHANNEL PANELS */
+.ch-compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
+@media(max-width:420px){.ch-compare{grid-template-columns:1fr;}}
+.ch-panel{background:var(--bg-inset);border:1px solid var(--bd);border-radius:var(--r2);padding:13px 15px;}
+.ch-name{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--tx3);margin-bottom:9px;}
+.ch-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd);font-size:13px;}
+.ch-row:last-child{border-bottom:none;}
+.ch-mon{color:var(--tx2);font-weight:500;}
+.ch-pct{font-family:var(--fd);font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;}
+.hi{color:var(--profit);} .lo{color:var(--c-ml);}
+
+/* ML TABLE */
+.ml-tbl{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;}
+.ml-tbl th{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--tx3);font-weight:600;padding:7px 10px;text-align:right;border-bottom:1px solid var(--bd2);}
+.ml-tbl th:first-child{text-align:left;}
+.ml-tbl td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--bd);color:var(--tx2);}
+.ml-tbl td:first-child{text-align:left;color:var(--tx1);font-weight:500;}
+.ml-tbl .tot td{font-weight:700;color:var(--tx1);border-top:1px solid var(--bd2);border-bottom:none;}
+
+/* SIMULATOR */
+.sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;}
+@media(max-width:650px){.sim-grid{grid-template-columns:1fr;}}
+.sim-sec-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);margin-bottom:7px;}
+.sim-base{margin-bottom:20px;}
+.sim-base-amt{font-family:var(--fd);font-size:28px;font-weight:800;color:var(--tx1);font-variant-numeric:tabular-nums;}
+.sim-base-sub{font-size:11px;color:var(--tx3);margin-top:3px;}
+.sl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.sl-lbl{font-size:13px;color:var(--tx2);font-weight:500;}
+.sl-pct{font-family:var(--fd);font-size:30px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1;}
+input[type="range"].sl{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;background:linear-gradient(to right,var(--accent) var(--fill,0%),var(--bg-inset) var(--fill,0%));outline:none;cursor:pointer;margin-bottom:5px;}
+input[type="range"].sl::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 0 4px var(--accent-g);}
+input[type="range"].sl::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:none;}
+.sl-ticks{display:flex;justify-content:space-between;font-size:10px;color:var(--tx3);margin-bottom:18px;}
+.sim-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.sim-card{background:var(--bg-inset);border:1px solid var(--bd);border-radius:var(--r2);padding:12px 14px;}
+.sim-card-lbl{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--tx3);margin-bottom:5px;}
+.sim-card-val{font-family:var(--fd);font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--tx1);line-height:1;}
+.cv-g{color:var(--profit);} .cv-r{color:#E84855;}
+.sim-rec{margin-top:13px;padding:11px 13px;border-radius:var(--r2);font-size:13px;font-weight:500;line-height:1.55;transition:background .3s,border .3s;}
+.rec-g{background:var(--profit-d);border:1px solid rgba(0,204,136,.25);color:var(--profit);}
+.rec-a{background:rgba(245,166,35,.10);border:1px solid rgba(245,166,35,.25);color:var(--c-op);}
+.rec-r{background:rgba(232,72,85,.10);border:1px solid rgba(232,72,85,.25);color:#E84855;}
+
+/* PROFIT BAR */
+.pb-lbl{font-size:11px;color:var(--tx3);margin-bottom:7px;font-weight:500;}
+.pb{height:30px;border-radius:6px;overflow:hidden;display:flex;background:var(--bg-inset);border:1px solid var(--bd);}
+.pbs{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:rgba(255,255,255,.92);overflow:hidden;white-space:nowrap;padding:0 5px;transition:width .4s ease;letter-spacing:.03em;}
+.pbs-ml{background:var(--c-ml);} .pbs-op{background:var(--c-op);} .pbs-sal{background:var(--c-sal);} .pbs-net{background:var(--profit);}
+.pb-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+.pbl{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--tx3);}
+.pbl-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+
+.notes{margin-top:6px;padding:13px 15px;background:var(--bg-inset);border:1px solid var(--bd);border-radius:var(--r2);font-size:11px;color:var(--tx3);line-height:1.75;}
+.notes strong{color:var(--tx2);font-weight:600;}
+.callout{padding:10px 13px;background:var(--bg-inset);border:1px solid var(--bd);border-radius:var(--r2);font-size:11px;color:var(--tx3);line-height:1.6;margin-top:10px;}
+
+/* HIDE/SHOW helpers */
+.only-all{} .only-month{display:none;}
+body.view-month .only-all{display:none;} body.view-month .only-month{display:block;}
+body.view-month .only-month-grid{display:grid;}
+</style>
+
+<div class="wrap">
+
+  <header class="hdr">
+    <div class="hdr-brand">
+      <span class="hdr-logo">NERON<em>+</em></span>
+      <span class="hdr-sub">Tablero de Rentabilidad</span>
+    </div>
+    <nav class="tabs" id="tabs"></nav>
+  </header>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi kpi-net">
+      <div class="kpi-lbl" id="k-lbl-net">Resultado Neto</div>
+      <div class="kpi-val" id="k-net">—</div>
+      <div class="kpi-sub" id="k-sub-net">—</div>
+    </div>
+    <div class="kpi kpi-rev">
+      <div class="kpi-lbl" id="k-lbl-rev">Ventas</div>
+      <div class="kpi-val" id="k-rev">—</div>
+      <div class="kpi-sub" id="k-sub-rev">—</div>
+    </div>
+    <div class="kpi kpi-gan">
+      <div class="kpi-lbl">Ganancia Bruta</div>
+      <div class="kpi-val" id="k-gan">—</div>
+      <div class="kpi-sub" id="k-sub-gan">—</div>
+    </div>
+    <div class="kpi kpi-exp">
+      <div class="kpi-lbl">Costos ML</div>
+      <div class="kpi-val" id="k-ml">—</div>
+      <div class="kpi-sub" id="k-sub-ml">—</div>
+    </div>
+  </div>
+
+  <!-- CHART: multi-month (all) OR single-month breakdown -->
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-ttl" id="chart-ttl">Resultado por Mes</span>
+      <span class="card-note" id="chart-note">Ganancia bruta desglosada por componente</span>
+    </div>
+    <div class="chart-box"><canvas id="plChart"></canvas></div>
+  </div>
+
+  <!-- TWO COLS -->
+  <div class="two-col">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-hdr">
+        <span class="card-ttl">Distribución de Gastos</span>
+        <span class="card-note">$4.342.165/mes</span>
+      </div>
+      <div class="chart-sm"><canvas id="expChart"></canvas></div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-hdr">
+        <span class="card-ttl">Margen Real por Canal</span>
+        <span class="card-note" id="ch-note">neto de comisiones ML</span>
+      </div>
+      <div id="ch-content"></div>
+    </div>
+  </div>
+
+  <!-- ML DETAIL TABLE -->
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-ttl">Detalle Costos Mercado Libre</span>
+      <span class="card-note">Subtotales s/IVA ni percepciones (créditos fiscales)</span>
+    </div>
+    <div id="ml-table-wrap"></div>
+  </div>
+
+  <!-- SALARY SIMULATOR -->
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-ttl">Simulador — Aumento de Sueldos</span>
+    </div>
+    <div class="sim-grid">
+      <div>
+        <div class="sim-base">
+          <div class="sim-sec-lbl">Sueldos actuales (3 empleados)</div>
+          <div class="sim-base-amt">$1.780.000</div>
+          <div class="sim-base-sub">+ $90.000 aportes = $1.870.000 costo mensual</div>
+        </div>
+        <div class="sl-row">
+          <span class="sl-lbl">Aumento a aplicar</span>
+          <span class="sl-pct" id="pctDisp">0%</span>
+        </div>
+        <input type="range" class="sl" id="salSl" min="0" max="50" value="0" step="1">
+        <div class="sl-ticks"><span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span><span>50%</span></div>
+        <div class="sim-cards">
+          <div class="sim-card"><div class="sim-card-lbl">Nuevo total sueldos</div><div class="sim-card-val" id="simSal">$1.780.000</div></div>
+          <div class="sim-card"><div class="sim-card-lbl">Costo extra / mes</div><div class="sim-card-val" id="simExtra">+$0</div></div>
+          <div class="sim-card"><div class="sim-card-lbl">Resultado neto nuevo</div><div class="sim-card-val cv-g" id="simNet">$8.438.624</div></div>
+          <div class="sim-card"><div class="sim-card-lbl">Impacto en resultado</div><div class="sim-card-val" id="simImp">−0,0%</div></div>
+        </div>
+        <div class="sim-rec rec-g" id="simRec"><strong>Todo en orden.</strong> Mové el slider para simular distintos escenarios.</div>
+      </div>
+      <div>
+        <div class="pb-lbl">¿A dónde va la ganancia bruta promedio? ($15.279.564/mes)</div>
+        <div class="pb">
+          <div class="pbs pbs-ml"  id="pbML"  style="width:16.3%">ML</div>
+          <div class="pbs pbs-op"  id="pbOP"  style="width:16.2%">Otros</div>
+          <div class="pbs pbs-sal" id="pbSAL" style="width:12.2%">Sueldos</div>
+          <div class="pbs pbs-net" id="pbNET" style="width:55.3%">Resultado (Pio)</div>
+        </div>
+        <div class="pb-legend">
+          <span class="pbl"><span class="pbl-dot" style="background:var(--c-ml)"></span>Costos ML</span>
+          <span class="pbl"><span class="pbl-dot" style="background:var(--c-op)"></span>Otros gastos</span>
+          <span class="pbl"><span class="pbl-dot" style="background:var(--c-sal)"></span>Sueldos empleados</span>
+          <span class="pbl"><span class="pbl-dot" style="background:var(--profit)"></span>Resultado neto</span>
+        </div>
+        <div style="margin-top:18px">
+          <div class="pb-lbl">Resultado neto según % de aumento (base promedio)</div>
+          <div class="chart-sm"><canvas id="scChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <strong>Notas metodológicas</strong><br>
+    • Ganancia bruta = precio venta − costo producto (DUX). No incluye comisiones ni gastos operativos.<br>
+    • Costos ML = subtotales de facturas sin IVA ni percepciones IIBB (créditos fiscales con el contador).<br>
+    • Margen real ML = (ganancia DUX − costos ML) / ventas ML.<br>
+    • Ventas Tienda Nube no separables de local (lista 1_WEB compartida). Costos TN = $0.<br>
+    • Gastos operativos desde planilla COSTOS en Productos.xlsx.
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+const MONTHS = [
+  {
+    id:'jun26', label:"Jun '26", full:'Junio 2026',
+    revenue:52332049, ganancia:16779333, mlCosts:3485996,
+    mlDetail:{ comisiones:2168312, envios:708993, mp:584631, subs:24060 },
+    casaVentas:37736541, casaGanancia:11132331, casaMargen:29.5,
+    mlVentas:14595508, mlGanancia:5647002, mlMargen:14.8,
+  },
+  {
+    id:'jul26', label:"Jul '26", full:'Julio 2026',
+    revenue:41907424, ganancia:13909802, mlCosts:2128735,
+    mlDetail:{ comisiones:1209739, envios:687572, mp:207365, subs:24060 },
+    casaVentas:32380439, casaGanancia:10394429, casaMargen:32.1,
+    mlVentas:9526985, mlGanancia:3515373, mlMargen:14.6,
+  },
+  {
+    id:'ago26', label:"Ago '26", full:'Agosto 2026',
+    revenue:49668847, ganancia:15149656, mlCosts:1881692,
+    mlDetail:{ comisiones:1057099, envios:456017, mp:344515, subs:24060 },
+    casaVentas:42468337, casaGanancia:12365545, casaMargen:29.1,
+    mlVentas:7200509, mlGanancia:2784111, mlMargen:12.5,
+  },
+  // <- AGREGAR NUEVO MES ACÁ
+];
+
+const EXPENSES = {
+  total:4342165, salBase:1780000, aportes:90000,
+  salTotal:1870000, otrosOp:2472165,
+};
+
+const sum   = arr => arr.reduce((a,b)=>a+b,0);
+const avg   = arr => sum(arr)/arr.length;
+
+const netOf = m => m.ganancia - m.mlCosts - EXPENSES.total;
+MONTHS.forEach(m => { m.net = netOf(m); });
+
+const avgNet = avg(MONTHS.map(m=>m.net));
+const avgGan = avg(MONTHS.map(m=>m.ganancia));
+const avgML  = avg(MONTHS.map(m=>m.mlCosts));
+
+const fmtM   = n => '$'+(n/1e6).toFixed(1).replace('.',',')+' M';
+const fmtARS = n => '$'+Math.round(n).toLocaleString('es-AR');
+const fmtPct = n => (n).toFixed(1).replace('.',',')+`%`;
+const tv     = p => getComputedStyle(document.documentElement).getPropertyValue(p).trim();
+
+Chart.defaults.font.family = "'Outfit',sans-serif";
+Chart.defaults.font.size   = 12;
+
+let currentId = 'all';
+
+const tabsEl = document.getElementById('tabs');
+const allBtn = document.createElement('button');
+allBtn.className = 'tab all active'; allBtn.textContent = 'Todo el período'; allBtn.dataset.id='all';
+tabsEl.appendChild(allBtn);
+MONTHS.forEach(m => {
+  const b = document.createElement('button');
+  b.className='tab'; b.textContent=m.label; b.dataset.id=m.id;
+  tabsEl.appendChild(b);
+});
+tabsEl.addEventListener('click', e => {
+  const btn = e.target.closest('.tab'); if(!btn) return;
+  tabsEl.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectPeriod(btn.dataset.id);
+});
+
+const plChart = new Chart(document.getElementById('plChart'), {
+  type:'bar',
+  data:{ labels:[], datasets:[
+    { label:'Costos ML',         data:[], backgroundColor:tv('--c-ml')+'BB', borderColor:tv('--c-ml'),  borderWidth:1 },
+    { label:'Otros gastos',      data:[], backgroundColor:tv('--c-op')+'BB', borderColor:tv('--c-op'),  borderWidth:1 },
+    { label:'Sueldos empleados', data:[], backgroundColor:tv('--c-sal')+'BB',borderColor:tv('--c-sal'), borderWidth:1 },
+    { label:'Resultado neto',    data:[], backgroundColor:tv('--profit')+'BB',borderColor:tv('--profit'),borderWidth:1 },
+  ]},
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'bottom',labels:{color:tv('--tx2'),padding:14,usePointStyle:true,pointStyleWidth:8,font:{size:11}}},
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmtM(c.raw)}`}}
+    },
+    scales:{
+      x:{stacked:true,grid:{display:false},ticks:{color:tv('--tx2'),font:{size:13}}},
+      y:{stacked:true,grid:{color:tv('--bd')},ticks:{color:tv('--tx3'),callback:v=>fmtM(v),font:{size:11}},border:{display:false}}
+    }
+  }
+});
+
+new Chart(document.getElementById('expChart'), {
+  type:'doughnut',
+  data:{
+    labels:['Alquiler','Sueldos','Servicios','Impuestos','Marketing','Operativos'],
+    datasets:[{
+      data:[1227974,1870000,378000,381000,300000,185191],
+      backgroundColor:['#3EADD4','#A78BFA','#F5A623','#E84855','#FF5500','#3EC6A0'],
+      borderWidth:2, borderColor:tv('--bg-card'),
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,cutout:'60%',
+    plugins:{
+      legend:{position:'right',labels:{color:tv('--tx2'),padding:9,usePointStyle:true,pointStyleWidth:8,font:{size:11}}},
+      tooltip:{callbacks:{label:c=>{const t=4342165;return ` ${c.label}: ${fmtM(c.raw)} (${(c.raw/t*100).toFixed(1)}%)`;}}},
+    }
+  }
+});
+
+const scPcts = [0,10,20,30,40,50];
+const scNets = scPcts.map(p => avgNet - EXPENSES.salBase*(p/100));
+const scColors = scNets.map(n => n>7e6?tv('--profit'):n>5e6?tv('--c-op'):'#E84855');
+const scChart = new Chart(document.getElementById('scChart'), {
+  type:'bar',
+  data:{
+    labels:scPcts.map(p=>p+'%'),
+    datasets:[{label:'Resultado neto',data:scNets,
+      backgroundColor:scColors.map(c=>c+'BB'),borderColor:scColors,borderWidth:1,borderRadius:4}]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      title:c=>'Aumento '+c[0].label,
+      label:c=>` Resultado neto: ${fmtM(c.raw)}`
+    }}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:tv('--tx2'),font:{size:11}}},
+      y:{grid:{color:tv('--bd')},ticks:{color:tv('--tx3'),callback:v=>fmtM(v),font:{size:10}},border:{display:false},suggestedMin:4e6}
+    }
+  }
+});
+
+function selectPeriod(id) {
+  currentId = id;
+  if (id === 'all') renderAll(); else renderMonth(MONTHS.find(m=>m.id===id));
+}
+
+function renderAll() {
+  document.body.classList.remove('view-month');
+  const totRev = sum(MONTHS.map(m=>m.revenue));
+  const totGan = sum(MONTHS.map(m=>m.ganancia));
+  const totML  = sum(MONTHS.map(m=>m.mlCosts));
+  const totNet = sum(MONTHS.map(m=>m.net));
+  const n = MONTHS.length;
+  setText('k-lbl-net','Resultado Neto Promedio');
+  setText('k-net', fmtM(totNet/n));
+  setText('k-sub-net',`total ${fmtM(totNet)} en ${n} meses`);
+  setText('k-lbl-rev','Ventas Promedio / Mes');
+  setText('k-rev', fmtM(totRev/n));
+  setText('k-sub-rev',`total ${fmtM(totRev)} · ${n} meses`);
+  setText('k-gan', fmtM(totGan/n));
+  setText('k-sub-gan', fmtPct(totGan/totRev*100)+' sobre ventas');
+  setText('k-ml',  fmtM(totML/n));
+  setText('k-sub-ml','promedio mensual');
+  setText('chart-ttl','Resultado por Mes');
+  setText('chart-note','Ganancia bruta desglosada por componente');
+  plChart.data.labels = MONTHS.map(m=>m.full);
+  plChart.data.datasets[0].data = MONTHS.map(m=>m.mlCosts);
+  plChart.data.datasets[1].data = MONTHS.map(m=>EXPENSES.otrosOp);
+  plChart.data.datasets[2].data = MONTHS.map(m=>EXPENSES.salTotal);
+  plChart.data.datasets[3].data = MONTHS.map(m=>m.net);
+  plChart.options.scales.x.stacked = true;
+  plChart.options.scales.y.stacked = true;
+  plChart.update();
+  setText('ch-note','neto de comisiones ML · todos los meses');
+  document.getElementById('ch-content').innerHTML = `
+    <div class="ch-compare">
+      <div class="ch-panel">
+        <div class="ch-name">🏪 Casa Central</div>
+        ${MONTHS.map(m=>`<div class="ch-row"><span class="ch-mon">${m.full}</span><span class="ch-pct hi">${fmtPct(m.casaMargen)}</span></div>`).join('')}
+      </div>
+      <div class="ch-panel">
+        <div class="ch-name">🛒 Mercado Libre</div>
+        ${MONTHS.map(m=>`<div class="ch-row"><span class="ch-mon">${m.full}</span><span class="ch-pct lo">${fmtPct(m.mlMargen)}</span></div>`).join('')}
+      </div>
+    </div>
+    <div class="callout">ML cobra 22–26% del precio de venta en comisiones, logística y Mercado Pago. El margen real es la mitad de lo que muestra el DUX.</div>`;
+  renderMLTable(null);
+}
+
+function renderMonth(m) {
+  document.body.classList.add('view-month');
+  const marginPct = m.ganancia/m.revenue*100;
+  const mlPct     = m.mlCosts/m.mlVentas*100;
+  setText('k-lbl-net','Resultado Neto');
+  setText('k-net', fmtM(m.net));
+  setText('k-sub-net', m.full);
+  setText('k-lbl-rev','Ventas del Mes');
+  setText('k-rev', fmtM(m.revenue));
+  setText('k-sub-rev', m.full);
+  setText('k-gan', fmtM(m.ganancia));
+  setText('k-sub-gan', fmtPct(marginPct)+' sobre ventas');
+  setText('k-ml',  fmtM(m.mlCosts));
+  setText('k-sub-ml', fmtPct(mlPct)+' de ventas ML');
+  setText('chart-ttl', 'Desglose — '+m.full);
+  setText('chart-note','Cómo se divide la ganancia bruta del mes');
+  plChart.data.labels = ['Costos ML','Otros gastos','Sueldos empl.','Resultado neto'];
+  plChart.data.datasets[0].data = [m.mlCosts, 0, 0, 0];
+  plChart.data.datasets[1].data = [0, EXPENSES.otrosOp, 0, 0];
+  plChart.data.datasets[2].data = [0, 0, EXPENSES.salTotal, 0];
+  plChart.data.datasets[3].data = [0, 0, 0, m.net];
+  plChart.options.scales.x.stacked = false;
+  plChart.options.scales.y.stacked = false;
+  plChart.update();
+  setText('ch-note', m.full);
+  document.getElementById('ch-content').innerHTML = `
+    <div class="ch-compare">
+      <div class="ch-panel">
+        <div class="ch-name">🏪 Casa Central</div>
+        <div class="ch-row"><span class="ch-mon">Ventas</span><span class="ch-pct">${fmtM(m.casaVentas)}</span></div>
+        <div class="ch-row"><span class="ch-mon">Ganancia bruta</span><span class="ch-pct">${fmtM(m.casaGanancia)}</span></div>
+        <div class="ch-row"><span class="ch-mon">Margen</span><span class="ch-pct hi">${fmtPct(m.casaMargen)}</span></div>
+      </div>
+      <div class="ch-panel">
+        <div class="ch-name">🛒 Mercado Libre</div>
+        <div class="ch-row"><span class="ch-mon">Ventas</span><span class="ch-pct">${fmtM(m.mlVentas)}</span></div>
+        <div class="ch-row"><span class="ch-mon">Gan. bruta DUX</span><span class="ch-pct">${fmtM(m.mlGanancia)}</span></div>
+        <div class="ch-row"><span class="ch-mon">Margen real</span><span class="ch-pct lo">${fmtPct(m.mlMargen)}</span></div>
+      </div>
+    </div>
+    <div class="callout">Margen real ML = (ganancia DUX ${fmtM(m.mlGanancia)} − costos ML ${fmtM(m.mlCosts)}) / ventas ML ${fmtM(m.mlVentas)}.</div>`;
+  renderMLTable(m);
+}
+
+function renderMLTable(m) {
+  const el = document.getElementById('ml-table-wrap');
+  if (m) {
+    el.innerHTML = `<table class="ml-tbl">
+      <thead><tr><th>Concepto</th><th>Monto</th></tr></thead>
+      <tbody>
+        <tr><td>Comisiones ML (neto bonif.)</td><td>${fmtARS(m.mlDetail.comisiones)}</td></tr>
+        <tr><td>Envíos Meli Log (neto bonif.)</td><td>${fmtARS(m.mlDetail.envios)}</td></tr>
+        <tr><td>Mercado Pago</td><td>${fmtARS(m.mlDetail.mp)}</td></tr>
+        <tr><td>Suscripciones (Max + Nivel 6)</td><td>${fmtARS(m.mlDetail.subs)}</td></tr>
+        <tr class="tot"><td>TOTAL ML — ${m.full}</td><td>${fmtARS(m.mlCosts)}</td></tr>
+      </tbody></table>`;
+  } else {
+    el.innerHTML = `<table class="ml-tbl">
+      <thead><tr><th>Concepto</th>${MONTHS.map(m=>`<th>${m.label}</th>`).join('')}</tr></thead>
+      <tbody>
+        <tr><td>Comisiones ML (neto)</td>${MONTHS.map(m=>`<td>${fmtARS(m.mlDetail.comisiones)}</td>`).join('')}</tr>
+        <tr><td>Envíos Meli Log (neto)</td>${MONTHS.map(m=>`<td>${fmtARS(m.mlDetail.envios)}</td>`).join('')}</tr>
+        <tr><td>Mercado Pago</td>${MONTHS.map(m=>`<td>${fmtARS(m.mlDetail.mp)}</td>`).join('')}</tr>
+        <tr><td>Suscripciones</td>${MONTHS.map(m=>`<td>${fmtARS(m.mlDetail.subs)}</td>`).join('')}</tr>
+        <tr class="tot"><td>TOTAL ML</td>${MONTHS.map(m=>`<td>${fmtARS(m.mlCosts)}</td>`).join('')}</tr>
+      </tbody></table>`;
+  }
+}
+
+const sl = document.getElementById('salSl');
+
+function updateSim() {
+  const pct   = +sl.value;
+  const extra = Math.round(EXPENSES.salBase * pct / 100);
+  const newSal = EXPENSES.salBase + extra;
+  const newNet = avgNet - extra;
+  const impPct = extra / avgNet * 100;
+  sl.style.setProperty('--fill',(pct/50*100)+'%');
+  setText('pctDisp', pct+'%');
+  setText('simSal', fmtARS(newSal));
+  setText('simExtra', extra===0?'+$0':'+'+fmtARS(extra));
+  const simNetEl = document.getElementById('simNet');
+  simNetEl.textContent = fmtARS(Math.round(newNet));
+  simNetEl.className = 'sim-card-val '+(newNet>6e6?'cv-g':newNet<4e6?'cv-r':'');
+  const simImpEl = document.getElementById('simImp');
+  simImpEl.textContent = '−'+impPct.toFixed(1).replace('.',',')+`%`;
+  simImpEl.className = 'sim-card-val '+(impPct<10?'cv-g':impPct>25?'cv-r':'');
+  const rec = document.getElementById('simRec');
+  if (impPct < 10) {
+    rec.className='sim-rec rec-g';
+    rec.innerHTML = pct===0
+      ? '<strong>Todo en orden.</strong> Mové el slider para simular distintos escenarios.'
+      : `<strong>Perfectamente viable.</strong> Un aumento del ${pct}% impacta solo el ${impPct.toFixed(1).replace('.',',')}% del resultado neto promedio.`;
+  } else if (impPct < 22) {
+    rec.className='sim-rec rec-a';
+    rec.innerHTML = `<strong>Viable con atención.</strong> Un ${pct}% reduce el resultado en ${impPct.toFixed(1).replace('.',',')} puntos. Seguí de cerca las ventas.`;
+  } else {
+    rec.className='sim-rec rec-r';
+    rec.innerHTML = `<strong>Impacto considerable.</strong> Un ${pct}% recorta ${impPct.toFixed(1).replace('.',',')} puntos. Evaluar bien antes de aplicar.`;
+  }
+  const salPct = ((EXPENSES.salTotal+extra)/avgGan*100).toFixed(1);
+  const netPct = Math.max(0,(newNet/avgGan*100)).toFixed(1);
+  const pbSAL = document.getElementById('pbSAL');
+  const pbNET = document.getElementById('pbNET');
+  pbSAL.style.width=salPct+'%'; pbSAL.textContent=salPct>8?'Sueldos':'';
+  pbNET.style.width=netPct+'%'; pbNET.textContent=netPct>12?'Resultado (Pio)':netPct>5?'Pio':'';
+}
+
+sl.addEventListener('input', updateSim);
+updateSim();
+document.getElementById('pbML').style.width=(avgML/avgGan*100).toFixed(1)+'%';
+document.getElementById('pbOP').style.width=(EXPENSES.otrosOp/avgGan*100).toFixed(1)+'%';
+
+function setText(id, val) { const el=document.getElementById(id); if(el) el.textContent=val; }
+
+renderAll();
+</script>
+
+</body>
+</html>
