@@ -87,22 +87,46 @@ body{font-family:var(--fb);background:var(--bg);color:var(--tx1);line-height:1.5
 .ml-tbl td:first-child{text-align:left;color:var(--tx1);font-weight:500;}
 .ml-tbl .tot td{font-weight:700;color:var(--tx1);border-top:1px solid var(--bd2);border-bottom:none;}
 
-/* GASTOS FIJOS EDIT UI */
-.exp-list{display:flex;flex-direction:column;gap:6px;}
-.exp-item{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--bg-inset);border:1px solid var(--bd);border-radius:var(--r2);font-size:13px;}
-.exp-item-lbl{flex:1;color:var(--tx1);font-weight:500;}
-.exp-item-amt{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--tx2);font-variant-numeric:tabular-nums;min-width:130px;text-align:right;}
-.exp-btn{background:none;border:1px solid var(--bd2);border-radius:6px;color:var(--tx3);cursor:pointer;padding:5px 9px;font-size:12px;transition:all .15s;line-height:1;font-family:var(--fb);}
+/* ═══ GASTOS FIJOS — JERÁRQUICO ═══════════════════════════════════ */
+.exp-list{display:flex;flex-direction:column;gap:7px;}
+
+/* Categoría */
+.exp-cat{border:1px solid var(--bd2);border-radius:var(--r2);overflow:hidden;}
+.exp-cat-hdr{display:flex;align-items:center;gap:8px;padding:11px 12px;background:var(--bg-hover);cursor:pointer;user-select:none;transition:background .15s;}
+.exp-cat-hdr:hover{filter:brightness(1.08);}
+.exp-cat-arrow{font-size:9px;color:var(--tx3);width:12px;flex-shrink:0;transition:transform .2s;line-height:1;}
+.exp-cat-arrow.open{transform:rotate(90deg);}
+.exp-cat-name{flex:1;font-size:13px;font-weight:600;color:var(--tx1);}
+.exp-cat-total{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--tx2);font-variant-numeric:tabular-nums;margin-right:4px;}
+.exp-cat-del{background:none;border:1px solid transparent;border-radius:6px;color:var(--tx3);cursor:pointer;padding:4px 8px;font-size:12px;line-height:1;transition:all .15s;}
+.exp-cat-del:hover{border-color:#E84855;color:#E84855;background:rgba(232,72,85,.08);}
+
+/* Ítems dentro de la categoría */
+.exp-cat-body{display:none;padding:8px 10px 10px 10px;background:var(--bg-inset);border-top:1px solid var(--bd);flex-direction:column;gap:5px;}
+.exp-cat-body.open{display:flex;}
+.exp-item{display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--bg-card);border:1px solid var(--bd);border-radius:6px;font-size:13px;}
+.exp-item-lbl{flex:1;color:var(--tx1);font-weight:400;}
+.exp-item-amt{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--tx2);font-variant-numeric:tabular-nums;min-width:110px;text-align:right;}
+.exp-btn{background:none;border:1px solid var(--bd2);border-radius:6px;color:var(--tx3);cursor:pointer;padding:4px 8px;font-size:11px;transition:all .15s;line-height:1;font-family:var(--fb);}
 .exp-btn:hover{background:var(--bg-hover);color:var(--tx1);}
 .exp-btn.del:hover{border-color:#E84855;color:#E84855;}
+.btn-add-item{align-self:flex-start;margin-top:3px;background:none;border:1px dashed var(--bd2);border-radius:6px;color:var(--tx3);cursor:pointer;padding:5px 12px;font-size:11px;font-weight:500;transition:all .15s;font-family:var(--fb);}
+.btn-add-item:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-g);}
+.exp-cat-empty{font-size:11px;color:var(--tx3);padding:6px 2px;font-style:italic;}
+
+/* Total footer */
 .exp-total-row{display:flex;justify-content:space-between;align-items:center;padding:12px 12px 0;border-top:1px solid var(--bd2);margin-top:10px;}
 .exp-total-lbl{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;font-weight:700;}
 .exp-total-amt{font-family:var(--fd);font-size:22px;font-weight:800;color:var(--tx1);}
-.btn-add{background:var(--accent);color:#fff;border:none;border-radius:100px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fb);transition:opacity .15s;}
-.btn-add:hover{opacity:.85;}
+
+/* Botones superiores */
 .exp-sync-badge{font-size:10px;padding:3px 8px;border-radius:100px;font-weight:600;}
 .exp-sync-ok{background:var(--profit-d);color:var(--profit);}
 .exp-sync-loading{background:var(--bg-inset);color:var(--tx3);}
+.btn-add-cat{background:none;border:1px solid var(--bd2);border-radius:100px;color:var(--tx2);cursor:pointer;padding:6px 14px;font-size:12px;font-weight:500;transition:all .15s;font-family:var(--fb);}
+.btn-add-cat:hover{border-color:var(--accent);color:var(--accent);}
+.btn-add{background:var(--accent);color:#fff;border:none;border-radius:100px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fb);transition:opacity .15s;}
+.btn-add:hover{opacity:.85;}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;}
@@ -111,6 +135,7 @@ body{font-family:var(--fb);background:var(--bg);color:var(--tx1);line-height:1.5
 .modal-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);display:block;margin-bottom:5px;}
 .modal-input{width:100%;background:var(--bg-inset);border:1px solid var(--bd2);border-radius:var(--r2);padding:9px 12px;color:var(--tx1);font-size:14px;font-family:var(--fb);outline:none;}
 .modal-input:focus{border-color:var(--accent);}
+.modal-cat-ctx{font-size:11px;color:var(--tx3);padding:8px 10px;background:var(--bg-inset);border:1px solid var(--bd);border-radius:6px;margin-bottom:14px;}
 .scope-box{padding:13px;background:var(--bg-inset);border:1px solid var(--bd);border-radius:var(--r2);margin-bottom:18px;}
 .scope-label{font-size:11px;color:var(--tx2);font-weight:500;margin-bottom:9px;}
 .scope-btns{display:flex;gap:8px;}
@@ -229,16 +254,16 @@ input[type="range"].sl::-moz-range-thumb{width:20px;height:20px;border-radius:50
     </div>
   </div>
 
-  <!-- GASTOS FIJOS CARD -->
+  <!-- GASTOS FIJOS — JERÁRQUICO -->
   <div class="card">
     <div class="card-hdr" style="align-items:center;">
       <div style="display:flex;align-items:center;gap:10px;">
         <span class="card-ttl">Gastos Fijos</span>
         <span id="exp-sync-badge" class="exp-sync-badge exp-sync-loading">cargando…</span>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <span class="card-note" id="exp-period-note"></span>
-        <button class="btn-add" onclick="openModal('add',null)">+ Agregar</button>
+        <button class="btn-add-cat" onclick="openModal('add-cat',null,null)">+ Categoría</button>
       </div>
     </div>
     <div class="exp-list" id="exp-list"></div>
@@ -316,28 +341,37 @@ input[type="range"].sl::-moz-range-thumb{width:20px;height:20px;border-radius:50
 <!-- ═══ MODAL ═══════════════════════════════════════════════ -->
 <div id="exp-modal" class="modal-overlay" style="display:none;">
   <div class="modal-box">
-    <div class="modal-ttl" id="modal-ttl">Agregar Gasto</div>
+    <div class="modal-ttl" id="modal-ttl">Agregar</div>
 
-    <!-- Fields (hidden for delete) -->
-    <div id="modal-fields">
+    <!-- Contexto de categoría (para add-item / edit-item / delete-item) -->
+    <div id="modal-cat-ctx" class="modal-cat-ctx" style="display:none;"></div>
+
+    <!-- Campo: nombre de categoría (solo add-cat) -->
+    <div id="modal-cat-name-wrap" style="display:none;margin-bottom:12px;">
+      <label class="modal-lbl" for="exp-cat-inp">Nombre de categoría</label>
+      <input id="exp-cat-inp" class="modal-input" type="text" placeholder="Ej: Mantenimiento">
+    </div>
+
+    <!-- Campos: concepto + monto (add-item / edit-item) -->
+    <div id="modal-item-fields" style="display:none;">
       <div style="margin-bottom:12px;">
         <label class="modal-lbl" for="exp-lbl-inp">Concepto</label>
-        <input id="exp-lbl-inp" class="modal-input" type="text" placeholder="Ej: Alquiler">
+        <input id="exp-lbl-inp" class="modal-input" type="text" placeholder="Ej: Luz y gas">
       </div>
       <div style="margin-bottom:18px;">
         <label class="modal-lbl" for="exp-amt-inp">Monto ($)</label>
-        <input id="exp-amt-inp" class="modal-input" type="number" placeholder="1000000" min="0" step="1">
+        <input id="exp-amt-inp" class="modal-input" type="number" placeholder="150000" min="0" step="1">
       </div>
     </div>
 
-    <!-- Delete preview (hidden by default) -->
+    <!-- Preview de eliminación (delete-item / delete-cat) -->
     <div id="modal-delete-preview" class="delete-preview" style="display:none;">
-      <div class="delete-preview-lbl">Vas a eliminar</div>
+      <div class="delete-preview-lbl" id="modal-delete-lbl">Vas a eliminar</div>
       <div class="delete-preview-val" id="modal-delete-name">—</div>
     </div>
 
     <!-- Scope selector -->
-    <div class="scope-box">
+    <div class="scope-box" id="modal-scope-box">
       <div class="scope-label">¿A qué meses aplica este cambio?</div>
       <div class="scope-btns">
         <button class="scope-btn active" id="scope-this" onclick="setScope('this')">Solo este mes</button>
@@ -363,30 +397,72 @@ input[type="range"].sl::-moz-range-thumb{width:20px;height:20px;border-radius:50
 const BIN_ID  = '6aa5606fffd5d16053fe6177';
 const BIN_KEY = '$2a$10$XdfWWlmdZvHWEHnwkRopRenSkJaN9LfHrjq.jBi2L32mQcspikfky';
 
+// ══════════════════════════════════════════════════════
+//  DEFAULT_EXPENSES — estructura jerárquica
+//  Cada categoría tiene un array de ítems
+// ══════════════════════════════════════════════════════
 const DEFAULT_EXPENSES = [
-  { label:'Sueldos + Aportes', amount:1870000 },
-  { label:'Alquiler',          amount:1227974 },
-  { label:'Servicios',         amount:378000  },
-  { label:'Impuestos/tasas',   amount:381000  },
-  { label:'Marketing',         amount:300000  },
-  { label:'Gastos operativos', amount:185191  },
+  {
+    category: 'Sueldos + Aportes',
+    items: [
+      { label: 'Sueldos base (3 empleados)', amount: 1780000 },
+      { label: 'Aportes patronales',         amount: 90000   },
+    ]
+  },
+  {
+    category: 'Alquiler',
+    items: [
+      { label: 'Alquiler', amount: 1227974 },
+    ]
+  },
+  {
+    category: 'Servicios',
+    items: [
+      { label: 'Servicios', amount: 378000 },
+    ]
+  },
+  {
+    category: 'Impuestos / Tasas',
+    items: [
+      { label: 'Impuestos y tasas', amount: 381000 },
+    ]
+  },
+  {
+    category: 'Marketing',
+    items: [
+      { label: 'Marketing', amount: 300000 },
+    ]
+  },
+  {
+    category: 'Gastos operativos',
+    items: [
+      { label: 'Gastos operativos', amount: 185191 },
+    ]
+  },
 ];
 
 let expensesData = {}; // keyed by month id
 
+// Deep clone
+function cloneExpenses(src) {
+  return src.map(cat => ({ ...cat, items: cat.items.map(i => ({ ...i })) }));
+}
 function getExpenses(mid) {
-  const src = expensesData[mid] || DEFAULT_EXPENSES;
-  return src.map(e => ({ ...e }));
+  return cloneExpenses(expensesData[mid] || DEFAULT_EXPENSES);
+}
+function catTotal(cat) {
+  return cat.items.reduce((a, i) => a + i.amount, 0);
 }
 function expensesTotal(mid) {
-  return getExpenses(mid).reduce((a, e) => a + e.amount, 0);
-}
-function getSalItem(mid) {
-  return getExpenses(mid).find(e => e.label.toLowerCase().includes('sueldo'));
+  return getExpenses(mid).reduce((a, cat) => a + catTotal(cat), 0);
 }
 function getSalTotal(mid) {
-  const item = getSalItem(mid);
-  return item ? item.amount : 1870000;
+  const exp = getExpenses(mid);
+  const cat = exp.find(c => c.category.toLowerCase().includes('sueldo'));
+  return cat ? catTotal(cat) : 0;
+}
+function getOtherExpenses(mid) {
+  return expensesTotal(mid) - getSalTotal(mid);
 }
 
 async function loadBin() {
@@ -399,15 +475,11 @@ async function loadBin() {
     }
   } catch(e) { console.warn('JSONBin load failed, using defaults'); }
 
-  // Badge
   const badge = document.getElementById('exp-sync-badge');
   badge.textContent = '✓ sincronizado';
   badge.className = 'exp-sync-badge exp-sync-ok';
 
-  // Recalculate nets
   MONTHS.forEach(m => { m.net = m.ganancia - m.mlCosts - expensesTotal(m.id); });
-
-  // Re-render everything
   selectPeriod(currentId);
   updateScChart();
   updateSim();
@@ -447,7 +519,6 @@ const MONTHS = [
 const sum = arr => arr.reduce((a, b) => a + b, 0);
 const avg = arr => sum(arr) / arr.length;
 
-// Initial calculation (with defaults; recalculated after JSONBin loads)
 MONTHS.forEach(m => { m.net = m.ganancia - m.mlCosts - expensesTotal(m.id); });
 
 // ══════════════════════════════════════════════════════
@@ -455,17 +526,21 @@ MONTHS.forEach(m => { m.net = m.ganancia - m.mlCosts - expensesTotal(m.id); });
 // ══════════════════════════════════════════════════════
 let currentId      = 'all';
 let workingMonthId = MONTHS[MONTHS.length - 1].id;
-let modalMode      = 'add';
-let modalIndex     = -1;
+let modalMode      = 'add-item'; // 'add-cat','add-item','edit-item','delete-item','delete-cat'
+let modalCatIdx    = -1;
+let modalItemIdx   = -1;
 let modalScope     = 'this';
+
+// Track expanded categories (by index, per render)
+const expandedCats = new Set();
 
 // ══════════════════════════════════════════════════════
 //  FORMATTERS
 // ══════════════════════════════════════════════════════
-const fmtM   = n => '$' + (n / 1e6).toFixed(1).replace('.', ',') + ' M';
-const fmtARS = n => '$' + Math.round(n).toLocaleString('es-AR');
-const fmtPct = n => n.toFixed(1).replace('.', ',') + '%';
-const tv     = p => getComputedStyle(document.documentElement).getPropertyValue(p).trim();
+const fmtM    = n => '$' + (n / 1e6).toFixed(1).replace('.', ',') + ' M';
+const fmtARS  = n => '$' + Math.round(n).toLocaleString('es-AR');
+const fmtPct  = n => n.toFixed(1).replace('.', ',') + '%';
+const tv      = p => getComputedStyle(document.documentElement).getPropertyValue(p).trim();
 const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
 
 Chart.defaults.font.family = "'Outfit',sans-serif";
@@ -473,7 +548,7 @@ Chart.defaults.font.size   = 12;
 const EXP_COLORS = ['#A78BFA','#3EADD4','#F5A623','#E84855','#FF5500','#3EC6A0','#F9DC5C','#60A5FA'];
 
 // ══════════════════════════════════════════════════════
-//  BUILD TABS
+//  TABS
 // ══════════════════════════════════════════════════════
 const tabsEl = document.getElementById('tabs');
 const allBtn = document.createElement('button');
@@ -515,12 +590,11 @@ const plChart = new Chart(document.getElementById('plChart'), {
   }
 });
 
-// Expense donut (dynamic)
 const expChart = new Chart(document.getElementById('expChart'), {
   type: 'doughnut',
   data: {
-    labels: DEFAULT_EXPENSES.map(e => e.label),
-    datasets: [{ data: DEFAULT_EXPENSES.map(e => e.amount),
+    labels: DEFAULT_EXPENSES.map(c => c.category),
+    datasets: [{ data: DEFAULT_EXPENSES.map(c => catTotal(c)),
       backgroundColor: DEFAULT_EXPENSES.map((_, i) => EXP_COLORS[i % EXP_COLORS.length]),
       borderWidth:2, borderColor:tv('--bg-card') }]
   },
@@ -530,7 +604,7 @@ const expChart = new Chart(document.getElementById('expChart'), {
       legend: { position:'right', labels:{ color:tv('--tx2'), padding:9, usePointStyle:true, pointStyleWidth:8, font:{size:11} } },
       tooltip: { callbacks: { label: c => {
         const t = c.dataset.data.reduce((a, b) => a + b, 0);
-        return ` ${c.label}: ${fmtM(c.raw)} (${(c.raw/t*100).toFixed(1)}%)`;
+        return ` ${c.label}: ${fmtM(c.raw)} (${(c.raw / t * 100).toFixed(1)}%)`;
       }}}
     }
   }
@@ -538,14 +612,13 @@ const expChart = new Chart(document.getElementById('expChart'), {
 
 function updateExpChart(mid) {
   const exp = getExpenses(mid);
-  expChart.data.labels = exp.map(e => e.label);
-  expChart.data.datasets[0].data = exp.map(e => e.amount);
+  expChart.data.labels = exp.map(c => c.category);
+  expChart.data.datasets[0].data = exp.map(c => catTotal(c));
   expChart.data.datasets[0].backgroundColor = exp.map((_, i) => EXP_COLORS[i % EXP_COLORS.length]);
   expChart.update();
   setText('exp-donut-note', fmtARS(expensesTotal(mid)) + '/mes');
 }
 
-// Scenarios chart
 const scChart = new Chart(document.getElementById('scChart'), {
   type: 'bar',
   data: { labels: [], datasets: [{ label:'Resultado neto', data:[], borderRadius:4 }] },
@@ -584,7 +657,6 @@ function selectPeriod(id) {
 }
 
 function renderAll() {
-  document.body.classList.remove('view-month');
   const n      = MONTHS.length;
   const totRev = sum(MONTHS.map(m => m.revenue));
   const totGan = sum(MONTHS.map(m => m.ganancia));
@@ -606,7 +678,7 @@ function renderAll() {
   setText('chart-note','Ganancia bruta desglosada por componente');
   plChart.data.labels = MONTHS.map(m => m.full);
   plChart.data.datasets[0].data = MONTHS.map(m => m.mlCosts);
-  plChart.data.datasets[1].data = MONTHS.map(m => expensesTotal(m.id) - getSalTotal(m.id));
+  plChart.data.datasets[1].data = MONTHS.map(m => getOtherExpenses(m.id));
   plChart.data.datasets[2].data = MONTHS.map(m => getSalTotal(m.id));
   plChart.data.datasets[3].data = MONTHS.map(m => m.net);
   plChart.options.scales.x.stacked = true;
@@ -629,7 +701,6 @@ function renderAll() {
 
   renderMLTable(null);
 
-  // Gastos: mostrar el más reciente
   const lastMid = MONTHS[MONTHS.length - 1].id;
   workingMonthId = lastMid;
   updateExpChart(lastMid);
@@ -637,7 +708,6 @@ function renderAll() {
 }
 
 function renderMonth(m) {
-  document.body.classList.add('view-month');
   const marginPct = m.ganancia / m.revenue * 100;
   const mlPct     = m.mlCosts / m.mlVentas * 100;
 
@@ -656,7 +726,7 @@ function renderMonth(m) {
   setText('chart-note','Cómo se divide la ganancia bruta del mes');
   plChart.data.labels = ['Costos ML','Otros gastos','Sueldos empl.','Resultado neto'];
   plChart.data.datasets[0].data = [m.mlCosts, 0, 0, 0];
-  plChart.data.datasets[1].data = [0, expensesTotal(m.id) - getSalTotal(m.id), 0, 0];
+  plChart.data.datasets[1].data = [0, getOtherExpenses(m.id), 0, 0];
   plChart.data.datasets[2].data = [0, 0, getSalTotal(m.id), 0];
   plChart.data.datasets[3].data = [0, 0, 0, m.net];
   plChart.options.scales.x.stacked = false;
@@ -713,6 +783,9 @@ function renderMLTable(m) {
   }
 }
 
+// ══════════════════════════════════════════════════════
+//  RENDER GASTOS FIJOS — JERÁRQUICO
+// ══════════════════════════════════════════════════════
 function renderExpensesList(mid, isAll) {
   const month   = MONTHS.find(m => m.id === mid);
   const noteEl  = document.getElementById('exp-period-note');
@@ -722,14 +795,35 @@ function renderExpensesList(mid, isAll) {
   noteEl.textContent = isAll ? `${month.label} (más reciente)` : month.full;
 
   const expenses = getExpenses(mid);
-  listEl.innerHTML = expenses.map((e, i) => `
-    <div class="exp-item">
-      <span class="exp-item-lbl">${e.label}</span>
-      <span class="exp-item-amt">${fmtARS(e.amount)}</span>
-      <button class="exp-btn" onclick="openModal('edit',${i})">✏</button>
-      <button class="exp-btn del" onclick="openModal('delete',${i})">✕</button>
-    </div>
-  `).join('');
+
+  listEl.innerHTML = expenses.map((cat, ci) => {
+    const total   = catTotal(cat);
+    const isOpen  = expandedCats.has(ci);
+    const itemsHtml = cat.items.length === 0
+      ? `<div class="exp-cat-empty">Sin ítems todavía.</div>`
+      : cat.items.map((item, ii) => `
+          <div class="exp-item">
+            <span class="exp-item-lbl">${item.label}</span>
+            <span class="exp-item-amt">${fmtARS(item.amount)}</span>
+            <button class="exp-btn" onclick="event.stopPropagation();openModal('edit-item',${ci},${ii})">✏</button>
+            <button class="exp-btn del" onclick="event.stopPropagation();openModal('delete-item',${ci},${ii})">✕</button>
+          </div>`).join('');
+
+    return `
+      <div class="exp-cat">
+        <div class="exp-cat-hdr" onclick="toggleCat(${ci})">
+          <span class="exp-cat-arrow${isOpen?' open':''}">▶</span>
+          <span class="exp-cat-name">${cat.category}</span>
+          <span class="exp-cat-total">${fmtARS(total)}</span>
+          <button class="exp-cat-del" title="Eliminar categoría"
+            onclick="event.stopPropagation();openModal('delete-cat',${ci},null)">✕</button>
+        </div>
+        <div class="exp-cat-body${isOpen?' open':''}">
+          ${itemsHtml}
+          <button class="btn-add-item" onclick="openModal('add-item',${ci},null)">+ Agregar ítem</button>
+        </div>
+      </div>`;
+  }).join('');
 
   const total = expensesTotal(mid);
   totalEl.style.display = 'flex';
@@ -739,52 +833,90 @@ function renderExpensesList(mid, isAll) {
   `;
 }
 
+function toggleCat(ci) {
+  if (expandedCats.has(ci)) expandedCats.delete(ci);
+  else expandedCats.add(ci);
+  renderExpensesList(workingMonthId, currentId === 'all');
+}
+
 // ══════════════════════════════════════════════════════
 //  MODAL
 // ══════════════════════════════════════════════════════
-function openModal(mode, index) {
-  modalMode  = mode;
-  modalIndex = index;
+function openModal(mode, catIdx, itemIdx) {
+  modalMode    = mode;
+  modalCatIdx  = catIdx;
+  modalItemIdx = itemIdx;
 
-  // Default scope: 'all' when viewing all periods, 'this' for single month
-  const defaultScope = (currentId === 'all' && mode === 'add') ? 'all' : 'this';
+  const defaultScope = (currentId === 'all' && (mode === 'add-cat' || mode === 'add-item')) ? 'all' : 'this';
   setScope(defaultScope);
 
   const expenses = getExpenses(workingMonthId);
-  const fieldsEl  = document.getElementById('modal-fields');
-  const deleteEl  = document.getElementById('modal-delete-preview');
-  const saveBtnEl = document.getElementById('modal-save-btn');
-  const statusEl  = document.getElementById('modal-status');
-  statusEl.style.display = 'none';
-  saveBtnEl.disabled = false;
+  const cat  = catIdx !== null ? expenses[catIdx] : null;
+  const item = (cat && itemIdx !== null) ? cat.items[itemIdx] : null;
 
-  if (mode === 'add') {
-    setText('modal-ttl','Agregar Gasto');
-    fieldsEl.style.display = '';
-    deleteEl.style.display = 'none';
-    document.getElementById('exp-lbl-inp').value = '';
-    document.getElementById('exp-amt-inp').value = '';
-    saveBtnEl.textContent = 'Agregar';
-    saveBtnEl.style.cssText = 'background:var(--accent);color:#fff;';
-  } else if (mode === 'edit') {
-    setText('modal-ttl','Editar Gasto');
-    fieldsEl.style.display = '';
-    deleteEl.style.display = 'none';
-    document.getElementById('exp-lbl-inp').value = expenses[index].label;
-    document.getElementById('exp-amt-inp').value = expenses[index].amount;
-    saveBtnEl.textContent = 'Guardar';
-    saveBtnEl.style.cssText = 'background:var(--accent);color:#fff;';
-  } else {
-    setText('modal-ttl','Eliminar gasto');
-    fieldsEl.style.display = 'none';
-    deleteEl.style.display = '';
-    setText('modal-delete-name', `${expenses[index].label} — ${fmtARS(expenses[index].amount)}`);
-    saveBtnEl.textContent = 'Eliminar';
-    saveBtnEl.style.cssText = 'background:#E84855;color:#fff;';
+  // Hide/show all sections
+  const el = id => document.getElementById(id);
+  el('modal-cat-ctx').style.display         = 'none';
+  el('modal-cat-name-wrap').style.display   = 'none';
+  el('modal-item-fields').style.display     = 'none';
+  el('modal-delete-preview').style.display  = 'none';
+  el('modal-status').style.display          = 'none';
+  el('modal-save-btn').disabled             = false;
+
+  const saveBtn = el('modal-save-btn');
+
+  if (mode === 'add-cat') {
+    setText('modal-ttl', 'Nueva Categoría');
+    el('modal-cat-name-wrap').style.display = '';
+    el('exp-cat-inp').value = '';
+    saveBtn.textContent = 'Crear';
+    saveBtn.style.cssText = 'background:var(--accent);color:#fff;';
+
+  } else if (mode === 'add-item') {
+    setText('modal-ttl', 'Agregar Ítem');
+    el('modal-cat-ctx').style.display = '';
+    el('modal-cat-ctx').textContent = `Categoría: ${cat.category}`;
+    el('modal-item-fields').style.display = '';
+    el('exp-lbl-inp').value = '';
+    el('exp-amt-inp').value = '';
+    saveBtn.textContent = 'Agregar';
+    saveBtn.style.cssText = 'background:var(--accent);color:#fff;';
+
+  } else if (mode === 'edit-item') {
+    setText('modal-ttl', 'Editar Ítem');
+    el('modal-cat-ctx').style.display = '';
+    el('modal-cat-ctx').textContent = `Categoría: ${cat.category}`;
+    el('modal-item-fields').style.display = '';
+    el('exp-lbl-inp').value = item.label;
+    el('exp-amt-inp').value = item.amount;
+    saveBtn.textContent = 'Guardar';
+    saveBtn.style.cssText = 'background:var(--accent);color:#fff;';
+
+  } else if (mode === 'delete-item') {
+    setText('modal-ttl', 'Eliminar Ítem');
+    el('modal-cat-ctx').style.display = '';
+    el('modal-cat-ctx').textContent = `Categoría: ${cat.category}`;
+    el('modal-delete-preview').style.display = '';
+    setText('modal-delete-lbl', 'Vas a eliminar el ítem');
+    setText('modal-delete-name', `${item.label} — ${fmtARS(item.amount)}`);
+    saveBtn.textContent = 'Eliminar';
+    saveBtn.style.cssText = 'background:#E84855;color:#fff;';
+
+  } else if (mode === 'delete-cat') {
+    setText('modal-ttl', 'Eliminar Categoría');
+    el('modal-delete-preview').style.display = '';
+    const total = catTotal(cat);
+    setText('modal-delete-lbl', `Vas a eliminar la categoría y sus ${cat.items.length} ítem(s)`);
+    setText('modal-delete-name', `${cat.category} — ${fmtARS(total)} total`);
+    saveBtn.textContent = 'Eliminar todo';
+    saveBtn.style.cssText = 'background:#E84855;color:#fff;';
   }
 
-  document.getElementById('exp-modal').style.display = 'flex';
-  if (mode !== 'delete') setTimeout(() => document.getElementById('exp-lbl-inp').focus(), 60);
+  el('exp-modal').style.display = 'flex';
+
+  // Auto-focus text inputs
+  if (mode === 'add-cat') setTimeout(() => el('exp-cat-inp').focus(), 60);
+  else if (mode === 'add-item' || mode === 'edit-item') setTimeout(() => el('exp-lbl-inp').focus(), 60);
 }
 
 function setScope(s) {
@@ -793,13 +925,12 @@ function setScope(s) {
   document.getElementById('scope-all').classList.toggle('active', s === 'all');
   const month = MONTHS.find(m => m.id === workingMonthId);
   const hint  = document.getElementById('scope-hint');
+  document.getElementById('scope-this').textContent = `Solo ${month.label}`;
   if (s === 'this') {
     hint.textContent = `Afecta solo a ${month.full}.`;
   } else {
     hint.textContent = `Afecta a todos los meses: ${MONTHS.map(m => m.label).join(', ')}.`;
   }
-  // Update "this month" button label
-  document.getElementById('scope-this').textContent = `Solo ${month.label}`;
 }
 
 function closeModal() {
@@ -814,33 +945,59 @@ function showStatus(msg, type) {
 }
 
 async function saveExpense() {
-  const saveBtnEl = document.getElementById('modal-save-btn');
-  saveBtnEl.disabled = true;
-  const origText = saveBtnEl.textContent;
-  saveBtnEl.textContent = 'Guardando…';
+  const saveBtn = document.getElementById('modal-save-btn');
+  saveBtn.disabled = true;
+  const origText = saveBtn.textContent;
+  saveBtn.textContent = 'Guardando…';
 
   const targets = modalScope === 'all' ? MONTHS.map(m => m.id) : [workingMonthId];
 
-  if (modalMode !== 'delete') {
+  // Helper: ensure month has its own copy
+  const ensureMid = mid => {
+    if (!expensesData[mid]) expensesData[mid] = cloneExpenses(DEFAULT_EXPENSES);
+  };
+
+  if (modalMode === 'add-cat') {
+    const catName = document.getElementById('exp-cat-inp').value.trim();
+    if (!catName) {
+      showStatus('Ingresá el nombre de la categoría.', 'err');
+      saveBtn.disabled = false; saveBtn.textContent = origText; return;
+    }
+    targets.forEach(mid => {
+      ensureMid(mid);
+      expensesData[mid].push({ category: catName, items: [] });
+    });
+
+  } else if (modalMode === 'add-item') {
     const label  = document.getElementById('exp-lbl-inp').value.trim();
     const amount = parseInt(document.getElementById('exp-amt-inp').value, 10);
-    if (!label) {
-      showStatus('Completá el concepto.', 'err');
-      saveBtnEl.disabled = false; saveBtnEl.textContent = origText; return;
-    }
-    if (isNaN(amount) || amount < 0) {
-      showStatus('Ingresá un monto válido.', 'err');
-      saveBtnEl.disabled = false; saveBtnEl.textContent = origText; return;
-    }
+    if (!label) { showStatus('Completá el concepto.', 'err'); saveBtn.disabled = false; saveBtn.textContent = origText; return; }
+    if (isNaN(amount) || amount < 0) { showStatus('Ingresá un monto válido.', 'err'); saveBtn.disabled = false; saveBtn.textContent = origText; return; }
     targets.forEach(mid => {
-      if (!expensesData[mid]) expensesData[mid] = DEFAULT_EXPENSES.map(e => ({...e}));
-      if (modalMode === 'add')  expensesData[mid].push({ label, amount });
-      else                      expensesData[mid][modalIndex] = { label, amount };
+      ensureMid(mid);
+      expensesData[mid][modalCatIdx].items.push({ label, amount });
     });
-  } else {
+
+  } else if (modalMode === 'edit-item') {
+    const label  = document.getElementById('exp-lbl-inp').value.trim();
+    const amount = parseInt(document.getElementById('exp-amt-inp').value, 10);
+    if (!label) { showStatus('Completá el concepto.', 'err'); saveBtn.disabled = false; saveBtn.textContent = origText; return; }
+    if (isNaN(amount) || amount < 0) { showStatus('Ingresá un monto válido.', 'err'); saveBtn.disabled = false; saveBtn.textContent = origText; return; }
     targets.forEach(mid => {
-      if (!expensesData[mid]) expensesData[mid] = DEFAULT_EXPENSES.map(e => ({...e}));
-      expensesData[mid].splice(modalIndex, 1);
+      ensureMid(mid);
+      expensesData[mid][modalCatIdx].items[modalItemIdx] = { label, amount };
+    });
+
+  } else if (modalMode === 'delete-item') {
+    targets.forEach(mid => {
+      ensureMid(mid);
+      expensesData[mid][modalCatIdx].items.splice(modalItemIdx, 1);
+    });
+
+  } else if (modalMode === 'delete-cat') {
+    targets.forEach(mid => {
+      ensureMid(mid);
+      expensesData[mid].splice(modalCatIdx, 1);
     });
   }
 
@@ -849,10 +1006,9 @@ async function saveExpense() {
     showStatus('✓ Guardado correctamente', 'ok');
   } catch(e) {
     showStatus('Error al guardar. Verificá tu conexión.', 'err');
-    saveBtnEl.disabled = false; saveBtnEl.textContent = origText; return;
+    saveBtn.disabled = false; saveBtn.textContent = origText; return;
   }
 
-  // Recalculate & re-render
   MONTHS.forEach(m => { m.net = m.ganancia - m.mlCosts - expensesTotal(m.id); });
   updateScChart();
   updateSim();
@@ -869,25 +1025,23 @@ async function saveExpense() {
 const sl = document.getElementById('salSl');
 
 function updateSim() {
-  const avgSal = avg(MONTHS.map(m => getSalTotal(m.id)));
-  const avgNet = avg(MONTHS.map(m => m.net));
-  const avgGan = avg(MONTHS.map(m => m.ganancia));
-  const avgML  = avg(MONTHS.map(m => m.mlCosts));
-  const avgExp = avg(MONTHS.map(m => expensesTotal(m.id)));
-  const avgOtros = avgExp - avgSal;
+  const avgSal   = avg(MONTHS.map(m => getSalTotal(m.id)));
+  const avgNet   = avg(MONTHS.map(m => m.net));
+  const avgGan   = avg(MONTHS.map(m => m.ganancia));
+  const avgML    = avg(MONTHS.map(m => m.mlCosts));
+  const avgOtros = avg(MONTHS.map(m => getOtherExpenses(m.id)));
 
   setText('sim-sal-display', fmtARS(avgSal));
   setText('pb-avg-lbl', `¿A dónde va la ganancia bruta promedio? (${fmtM(avgGan)}/mes)`);
 
   const pct   = +sl.value;
   const extra = Math.round(avgSal * pct / 100);
-  const newSal = avgSal + extra;
   const newNet = avgNet - extra;
   const impPct = extra / avgNet * 100;
 
   sl.style.setProperty('--fill', (pct / 50 * 100) + '%');
   setText('pctDisp', pct + '%');
-  setText('simSal', fmtARS(newSal));
+  setText('simSal', fmtARS(avgSal + extra));
   setText('simExtra', extra === 0 ? '+$0' : '+' + fmtARS(extra));
 
   const simNetEl = document.getElementById('simNet');
@@ -914,17 +1068,16 @@ function updateSim() {
 
   const salPct = ((avgSal + extra) / avgGan * 100).toFixed(1);
   const netPct = Math.max(0, (newNet / avgGan * 100)).toFixed(1);
-  const pbSAL  = document.getElementById('pbSAL');
-  const pbNET  = document.getElementById('pbNET');
-  pbSAL.style.width = salPct + '%'; pbSAL.textContent = +salPct > 8 ? 'Sueldos' : '';
-  pbNET.style.width = netPct + '%'; pbNET.textContent = +netPct > 12 ? 'Resultado (Pio)' : +netPct > 5 ? 'Pio' : '';
-  document.getElementById('pbML').style.width = (avgML / avgGan * 100).toFixed(1) + '%';
-  document.getElementById('pbOP').style.width = (avgOtros / avgGan * 100).toFixed(1) + '%';
+  document.getElementById('pbSAL').style.width = salPct + '%';
+  document.getElementById('pbSAL').textContent = +salPct > 8 ? 'Sueldos' : '';
+  document.getElementById('pbNET').style.width = netPct + '%';
+  document.getElementById('pbNET').textContent = +netPct > 12 ? 'Resultado (Pio)' : +netPct > 5 ? 'Pio' : '';
+  document.getElementById('pbML').style.width  = (avgML / avgGan * 100).toFixed(1) + '%';
+  document.getElementById('pbOP').style.width  = (avgOtros / avgGan * 100).toFixed(1) + '%';
 }
 
 sl.addEventListener('input', updateSim);
 
-// Close modal on overlay click
 document.getElementById('exp-modal').addEventListener('click', e => {
   if (e.target === document.getElementById('exp-modal')) closeModal();
 });
@@ -935,5 +1088,5 @@ document.getElementById('exp-modal').addEventListener('click', e => {
 renderAll();
 updateScChart();
 updateSim();
-loadBin(); // async: re-renders when JSONBin responds
+loadBin();
 </script>
