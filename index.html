@@ -90,20 +90,21 @@ body{font-family:var(--fb);background:var(--bg);color:var(--tx1);line-height:1.5
 /* ═══ GASTOS FIJOS — JERÁRQUICO ═══════════════════════════════════ */
 .exp-list{display:flex;flex-direction:column;gap:7px;}
 
-/* Categoría */
+/* Categoría — usa <details>/<summary> nativo */
 .exp-cat{border:1px solid var(--bd2);border-radius:var(--r2);overflow:hidden;}
-.exp-cat-hdr{display:flex;align-items:center;gap:8px;padding:11px 12px;background:var(--bg-hover);cursor:pointer;user-select:none;transition:background .15s;}
-.exp-cat-hdr:hover{filter:brightness(1.08);}
-.exp-cat-arrow{font-size:9px;color:var(--tx3);width:12px;flex-shrink:0;transition:transform .2s;line-height:1;}
-.exp-cat-arrow.open{transform:rotate(90deg);}
+.exp-cat summary{display:flex;align-items:center;gap:8px;padding:11px 12px;background:var(--bg-hover);cursor:pointer;user-select:none;transition:background .15s;list-style:none;}
+.exp-cat summary::-webkit-details-marker{display:none;}
+.exp-cat summary::marker{display:none;}
+.exp-cat summary:hover{filter:brightness(1.08);}
+.exp-cat-arrow{font-size:9px;color:var(--tx3);width:12px;flex-shrink:0;transition:transform .2s;line-height:1;display:inline-block;}
+.exp-cat[open] .exp-cat-arrow{transform:rotate(90deg);}
 .exp-cat-name{flex:1;font-size:13px;font-weight:600;color:var(--tx1);}
 .exp-cat-total{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--tx2);font-variant-numeric:tabular-nums;margin-right:4px;}
 .exp-cat-del{background:none;border:1px solid transparent;border-radius:6px;color:var(--tx3);cursor:pointer;padding:4px 8px;font-size:12px;line-height:1;transition:all .15s;}
 .exp-cat-del:hover{border-color:#E84855;color:#E84855;background:rgba(232,72,85,.08);}
 
 /* Ítems dentro de la categoría */
-.exp-cat-body{display:none;padding:8px 10px 10px 10px;background:var(--bg-inset);border-top:1px solid var(--bd);flex-direction:column;gap:5px;}
-.exp-cat-body.open{display:flex;}
+.exp-cat-body{display:flex;flex-direction:column;gap:5px;padding:8px 10px 10px 10px;background:var(--bg-inset);border-top:1px solid var(--bd);}
 .exp-item{display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--bg-card);border:1px solid var(--bd);border-radius:6px;font-size:13px;}
 .exp-item-lbl{flex:1;color:var(--tx1);font-weight:400;}
 .exp-item-amt{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--tx2);font-variant-numeric:tabular-nums;min-width:110px;text-align:right;}
@@ -263,7 +264,7 @@ input[type="range"].sl::-moz-range-thumb{width:20px;height:20px;border-radius:50
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <span class="card-note" id="exp-period-note"></span>
-        <button class="btn-add-cat" id="btn-add-cat">+ Categoría</button>
+        <button class="btn-add-cat" data-act="add-cat">+ Categoría</button>
       </div>
     </div>
     <div class="exp-list" id="exp-list"></div>
@@ -531,9 +532,6 @@ let modalCatIdx    = -1;
 let modalItemIdx   = -1;
 let modalScope     = 'this';
 
-// Track expanded categories (by index, per render)
-const expandedCats = new Set();
-
 // ══════════════════════════════════════════════════════
 //  FORMATTERS
 // ══════════════════════════════════════════════════════
@@ -796,9 +794,12 @@ function renderExpensesList(mid, isAll) {
 
   const expenses = getExpenses(mid);
 
+  // Snapshot qué categorías estaban abiertas antes de re-renderizar
+  const openSet = new Set();
+  listEl.querySelectorAll('details.exp-cat').forEach((el, i) => { if (el.open) openSet.add(i); });
+
   listEl.innerHTML = expenses.map((cat, ci) => {
-    const total   = catTotal(cat);
-    const isOpen  = expandedCats.has(ci);
+    const total     = catTotal(cat);
     const itemsHtml = cat.items.length === 0
       ? `<div class="exp-cat-empty">Sin ítems todavía.</div>`
       : cat.items.map((item, ii) => `
@@ -810,19 +811,22 @@ function renderExpensesList(mid, isAll) {
           </div>`).join('');
 
     return `
-      <div class="exp-cat">
-        <div class="exp-cat-hdr" data-act="toggle" data-ci="${ci}">
-          <span class="exp-cat-arrow${isOpen?' open':''}">▶</span>
+      <details class="exp-cat">
+        <summary>
+          <span class="exp-cat-arrow">▶</span>
           <span class="exp-cat-name">${cat.category}</span>
           <span class="exp-cat-total">${fmtARS(total)}</span>
-          <button class="exp-cat-del" title="Eliminar categoría" data-act="delete-cat" data-ci="${ci}">✕</button>
-        </div>
-        <div class="exp-cat-body${isOpen?' open':''}">
+          <button class="exp-cat-del" data-act="delete-cat" data-ci="${ci}">✕</button>
+        </summary>
+        <div class="exp-cat-body">
           ${itemsHtml}
           <button class="btn-add-item" data-act="add-item" data-ci="${ci}">+ Agregar ítem</button>
         </div>
-      </div>`;
+      </details>`;
   }).join('');
+
+  // Restaurar estado abierto
+  listEl.querySelectorAll('details.exp-cat').forEach((el, i) => { if (openSet.has(i)) el.open = true; });
 
   const total = expensesTotal(mid);
   totalEl.style.display = 'flex';
@@ -832,25 +836,20 @@ function renderExpensesList(mid, isAll) {
   `;
 }
 
-function toggleCat(ci) {
-  if (expandedCats.has(ci)) expandedCats.delete(ci);
-  else expandedCats.add(ci);
-  renderExpensesList(workingMonthId, currentId === 'all');
-}
-
-// Event delegation — handles all clicks inside #exp-list (works en web y desktop)
-document.getElementById('exp-list').addEventListener('click', function(e) {
+// Delegación global — botones con data-act (funciona en web, desktop y cualquier sandbox)
+document.addEventListener('click', function(e) {
   const btn = e.target.closest('[data-act]');
   if (!btn) return;
-  e.stopPropagation();
+  // Evitar que el click en un botón dentro de <summary> abra/cierre el <details>
+  if (btn.closest('summary')) e.preventDefault();
   const act = btn.dataset.act;
   const ci  = btn.dataset.ci !== undefined ? parseInt(btn.dataset.ci) : null;
   const ii  = btn.dataset.ii !== undefined ? parseInt(btn.dataset.ii) : null;
-  if      (act === 'toggle')      toggleCat(ci);
-  else if (act === 'edit-item')   openModal('edit-item',   ci, ii);
+  if      (act === 'edit-item')   openModal('edit-item',   ci, ii);
   else if (act === 'delete-item') openModal('delete-item', ci, ii);
   else if (act === 'add-item')    openModal('add-item',    ci, null);
   else if (act === 'delete-cat')  openModal('delete-cat',  ci, null);
+  else if (act === 'add-cat')     openModal('add-cat',     null, null);
 });
 
 // ══════════════════════════════════════════════════════
@@ -1100,7 +1099,6 @@ document.getElementById('modal-cancel-btn').addEventListener('click', closeModal
 document.getElementById('modal-save-btn').addEventListener('click', saveExpense);
 document.getElementById('scope-this').addEventListener('click', () => setScope('this'));
 document.getElementById('scope-all').addEventListener('click',  () => setScope('all'));
-document.getElementById('btn-add-cat').addEventListener('click', () => openModal('add-cat', null, null));
 
 // ══════════════════════════════════════════════════════
 //  INIT
