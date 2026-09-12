@@ -826,31 +826,29 @@ function renderExpensesList(mid, isAll) {
   }).join('');
 
   // Restaurar estado abierto
-  listEl.querySelectorAll('details.exp-cat').forEach((el, i) => { if (openSet.has(i)) el.open = true; });
+  listEl.querySelectorAll('details.exp-cat').forEach(function(el, i) { if (openSet.has(i)) el.open = true; });
 
   const total = expensesTotal(mid);
   totalEl.style.display = 'flex';
-  totalEl.innerHTML = `
-    <span class="exp-total-lbl">Total gastos fijos</span>
-    <span class="exp-total-amt">${fmtARS(total)}</span>
-  `;
-}
+  totalEl.innerHTML = '<span class="exp-total-lbl">Total gastos fijos</span><span class="exp-total-amt">' + fmtARS(total) + '</span>';
 
-// Delegación global — botones con data-act (funciona en web, desktop y cualquier sandbox)
-document.addEventListener('click', function(e) {
-  const btn = e.target.closest('[data-act]');
-  if (!btn) return;
-  // Evitar que el click en un botón dentro de <summary> abra/cierre el <details>
-  if (btn.closest('summary')) e.preventDefault();
-  const act = btn.dataset.act;
-  const ci  = btn.dataset.ci !== undefined ? parseInt(btn.dataset.ci) : null;
-  const ii  = btn.dataset.ii !== undefined ? parseInt(btn.dataset.ii) : null;
-  if      (act === 'edit-item')   openModal('edit-item',   ci, ii);
-  else if (act === 'delete-item') openModal('delete-item', ci, ii);
-  else if (act === 'add-item')    openModal('add-item',    ci, null);
-  else if (act === 'delete-cat')  openModal('delete-cat',  ci, null);
-  else if (act === 'add-cat')     openModal('add-cat',     null, null);
-});
+  // Listeners directos en cada botón (evita cualquier problema de sandbox/delegation)
+  listEl.querySelectorAll('button[data-act]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      var act = btn.getAttribute('data-act');
+      var ciRaw = btn.getAttribute('data-ci');
+      var iiRaw = btn.getAttribute('data-ii');
+      var ci = ciRaw !== null ? parseInt(ciRaw, 10) : null;
+      var ii = iiRaw !== null ? parseInt(iiRaw, 10) : null;
+      if      (act === 'edit-item')   openModal('edit-item',   ci, ii);
+      else if (act === 'delete-item') openModal('delete-item', ci, ii);
+      else if (act === 'add-item')    openModal('add-item',    ci, null);
+      else if (act === 'delete-cat')  openModal('delete-cat',  ci, null);
+    });
+  });
+}
 
 // ══════════════════════════════════════════════════════
 //  MODAL
@@ -1091,14 +1089,18 @@ function updateSim() {
 
 sl.addEventListener('input', updateSim);
 
-// ── Modal listeners (delegated, no inline onclick) ──
-document.getElementById('exp-modal').addEventListener('click', e => {
-  if (e.target === document.getElementById('exp-modal')) closeModal();
+// ── Botones estáticos — listeners directos ──
+document.getElementById('exp-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
 });
 document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
 document.getElementById('modal-save-btn').addEventListener('click', saveExpense);
-document.getElementById('scope-this').addEventListener('click', () => setScope('this'));
-document.getElementById('scope-all').addEventListener('click',  () => setScope('all'));
+document.getElementById('scope-this').addEventListener('click', function() { setScope('this'); });
+document.getElementById('scope-all').addEventListener('click',  function() { setScope('all'); });
+document.querySelector('[data-act="add-cat"]').addEventListener('click', function(e) {
+  e.preventDefault();
+  openModal('add-cat', null, null);
+});
 
 // ══════════════════════════════════════════════════════
 //  INIT
