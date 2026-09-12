@@ -263,7 +263,7 @@ input[type="range"].sl::-moz-range-thumb{width:20px;height:20px;border-radius:50
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <span class="card-note" id="exp-period-note"></span>
-        <button class="btn-add-cat" onclick="openModal('add-cat',null,null)">+ Categoría</button>
+        <button class="btn-add-cat" id="btn-add-cat">+ Categoría</button>
       </div>
     </div>
     <div class="exp-list" id="exp-list"></div>
@@ -374,8 +374,8 @@ input[type="range"].sl::-moz-range-thumb{width:20px;height:20px;border-radius:50
     <div class="scope-box" id="modal-scope-box">
       <div class="scope-label">¿A qué meses aplica este cambio?</div>
       <div class="scope-btns">
-        <button class="scope-btn active" id="scope-this" onclick="setScope('this')">Solo este mes</button>
-        <button class="scope-btn" id="scope-all" onclick="setScope('all')">Todos los meses</button>
+        <button class="scope-btn active" id="scope-this">Solo este mes</button>
+        <button class="scope-btn" id="scope-all">Todos los meses</button>
       </div>
       <div class="scope-hint" id="scope-hint"></div>
     </div>
@@ -383,8 +383,8 @@ input[type="range"].sl::-moz-range-thumb{width:20px;height:20px;border-radius:50
     <div id="modal-status" class="modal-status" style="display:none;"></div>
 
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-      <button class="btn-save" id="modal-save-btn" onclick="saveExpense()">Guardar</button>
+      <button class="btn-cancel" id="modal-cancel-btn">Cancelar</button>
+      <button class="btn-save" id="modal-save-btn">Guardar</button>
     </div>
   </div>
 </div>
@@ -805,22 +805,21 @@ function renderExpensesList(mid, isAll) {
           <div class="exp-item">
             <span class="exp-item-lbl">${item.label}</span>
             <span class="exp-item-amt">${fmtARS(item.amount)}</span>
-            <button class="exp-btn" onclick="event.stopPropagation();openModal('edit-item',${ci},${ii})">✏</button>
-            <button class="exp-btn del" onclick="event.stopPropagation();openModal('delete-item',${ci},${ii})">✕</button>
+            <button class="exp-btn" data-act="edit-item" data-ci="${ci}" data-ii="${ii}">✏</button>
+            <button class="exp-btn del" data-act="delete-item" data-ci="${ci}" data-ii="${ii}">✕</button>
           </div>`).join('');
 
     return `
       <div class="exp-cat">
-        <div class="exp-cat-hdr" onclick="toggleCat(${ci})">
+        <div class="exp-cat-hdr" data-act="toggle" data-ci="${ci}">
           <span class="exp-cat-arrow${isOpen?' open':''}">▶</span>
           <span class="exp-cat-name">${cat.category}</span>
           <span class="exp-cat-total">${fmtARS(total)}</span>
-          <button class="exp-cat-del" title="Eliminar categoría"
-            onclick="event.stopPropagation();openModal('delete-cat',${ci},null)">✕</button>
+          <button class="exp-cat-del" title="Eliminar categoría" data-act="delete-cat" data-ci="${ci}">✕</button>
         </div>
         <div class="exp-cat-body${isOpen?' open':''}">
           ${itemsHtml}
-          <button class="btn-add-item" onclick="openModal('add-item',${ci},null)">+ Agregar ítem</button>
+          <button class="btn-add-item" data-act="add-item" data-ci="${ci}">+ Agregar ítem</button>
         </div>
       </div>`;
   }).join('');
@@ -838,6 +837,21 @@ function toggleCat(ci) {
   else expandedCats.add(ci);
   renderExpensesList(workingMonthId, currentId === 'all');
 }
+
+// Event delegation — handles all clicks inside #exp-list (works en web y desktop)
+document.getElementById('exp-list').addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-act]');
+  if (!btn) return;
+  e.stopPropagation();
+  const act = btn.dataset.act;
+  const ci  = btn.dataset.ci !== undefined ? parseInt(btn.dataset.ci) : null;
+  const ii  = btn.dataset.ii !== undefined ? parseInt(btn.dataset.ii) : null;
+  if      (act === 'toggle')      toggleCat(ci);
+  else if (act === 'edit-item')   openModal('edit-item',   ci, ii);
+  else if (act === 'delete-item') openModal('delete-item', ci, ii);
+  else if (act === 'add-item')    openModal('add-item',    ci, null);
+  else if (act === 'delete-cat')  openModal('delete-cat',  ci, null);
+});
 
 // ══════════════════════════════════════════════════════
 //  MODAL
@@ -1078,9 +1092,15 @@ function updateSim() {
 
 sl.addEventListener('input', updateSim);
 
+// ── Modal listeners (delegated, no inline onclick) ──
 document.getElementById('exp-modal').addEventListener('click', e => {
   if (e.target === document.getElementById('exp-modal')) closeModal();
 });
+document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
+document.getElementById('modal-save-btn').addEventListener('click', saveExpense);
+document.getElementById('scope-this').addEventListener('click', () => setScope('this'));
+document.getElementById('scope-all').addEventListener('click',  () => setScope('all'));
+document.getElementById('btn-add-cat').addEventListener('click', () => openModal('add-cat', null, null));
 
 // ══════════════════════════════════════════════════════
 //  INIT
