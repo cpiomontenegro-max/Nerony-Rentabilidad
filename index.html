@@ -105,41 +105,44 @@ body{font-family:var(--fb);background:var(--bg);color:var(--tx1);line-height:1.5
 .exp-cat-body{display:flex;flex-direction:column;gap:5px;padding:8px 10px 10px 10px;background:var(--bg-inset);border-top:1px solid var(--bd);}
 .exp-cat-empty{font-size:11px;color:var(--tx3);padding:6px 2px;font-style:italic;}
 
-/* Ítems — ahora como <details> expandibles */
-.exp-item-det{border:1px solid var(--bd);border-radius:6px;overflow:hidden;}
-.exp-item-det>.exp-item-sum{display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--bg-card);list-style:none;cursor:pointer;}
-.exp-item-det>.exp-item-sum::-webkit-details-marker,.exp-item-det>.exp-item-sum::marker{display:none;}
-.exp-item-det>.exp-item-sum:hover{background:var(--bg-hover);}
+/* ── ÍTEMS (details expandibles) ── */
+.exp-item-det{border:1px solid var(--bd);border-radius:6px;overflow:hidden;margin-bottom:4px;}
+.exp-item-sum{display:flex;align-items:center;gap:8px;padding:9px 11px;background:var(--bg-card);list-style:none;cursor:pointer;user-select:none;}
+.exp-item-sum::-webkit-details-marker,.exp-item-sum::marker{display:none;}
+.exp-item-sum:hover{background:var(--bg-hover);}
 .exp-item-lbl{flex:1;color:var(--tx1);font-weight:400;font-size:13px;}
-.exp-item-amt{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--tx2);font-variant-numeric:tabular-nums;}
-.exp-edit-hint{font-size:10px;color:var(--tx3);white-space:nowrap;}
-.exp-item-edit-body{padding:8px 10px;background:var(--bg-inset);border-top:1px solid var(--bd);display:flex;flex-direction:column;gap:6px;}
+.exp-item-amt{font-family:var(--fd);font-size:15px;font-weight:700;color:var(--tx2);font-variant-numeric:tabular-nums;}
+.exp-edit-hint{font-size:10px;color:var(--tx3);white-space:nowrap;padding:2px 7px;border:1px solid var(--bd);border-radius:100px;}
 
-/* Formularios inline */
-.edit-row,.del-row,.add-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
-.del-row{padding-top:6px;border-top:1px dashed var(--bd);}
-.modal-input{background:var(--bg-card);border:1px solid var(--bd2);border-radius:var(--r2);padding:7px 10px;color:var(--tx1);font-size:13px;font-family:var(--fb);outline:none;}
-.modal-input:focus{border-color:var(--accent);}
-.scope-sel{background:var(--bg-inset);border:1px solid var(--bd2);border-radius:6px;color:var(--tx2);padding:6px 8px;font-size:11px;font-family:var(--fb);cursor:pointer;}
-.btn-save-inline{background:var(--accent);color:#fff;border:none;border-radius:var(--r2);padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fb);white-space:nowrap;}
-.btn-save-inline:hover{opacity:.85;} .btn-save-inline:disabled{opacity:.5;cursor:not-allowed;}
-.btn-del-inline{background:none;border:1px solid #E84855;color:#E84855;border-radius:var(--r2);padding:6px 12px;font-size:11px;cursor:pointer;font-family:var(--fb);white-space:nowrap;}
-.btn-del-inline:hover{background:rgba(232,72,85,.10);}
-.del-warn{font-size:11px;color:var(--tx3);flex:1;}
+/* Cuerpo del ítem — UN solo formulario */
+.exp-item-edit-body{padding:10px 11px;background:var(--bg-inset);border-top:1px solid var(--bd);}
+.item-form-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.ipt-txt{background:var(--bg-card);border:1px solid var(--bd2);border-radius:var(--r2);padding:7px 10px;color:var(--tx1);font-size:13px;font-family:var(--fb);outline:none;flex:1;min-width:120px;}
+.ipt-txt:focus{border-color:var(--accent);}
+.ipt-num{background:var(--bg-card);border:1px solid var(--bd2);border-radius:var(--r2);padding:7px 10px;color:var(--tx1);font-size:13px;font-family:var(--fb);outline:none;width:120px;}
+.ipt-num:focus{border-color:var(--accent);}
+.ipt-scope{background:var(--bg-card);border:1px solid var(--bd2);border-radius:var(--r2);color:var(--tx2);padding:7px 8px;font-size:12px;font-family:var(--fb);cursor:pointer;outline:none;}
+.btn-guardar{background:var(--accent);color:#fff;border:none;border-radius:var(--r2);padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fb);white-space:nowrap;}
+.btn-guardar:hover{opacity:.85;} .btn-guardar:disabled{opacity:.45;cursor:not-allowed;}
+.btn-eliminar{background:none;border:1px solid rgba(232,72,85,.5);color:#E84855;border-radius:var(--r2);padding:7px 11px;font-size:13px;cursor:pointer;font-family:var(--fb);white-space:nowrap;line-height:1;}
+.btn-eliminar:hover{background:rgba(232,72,85,.1);}
 
-/* Add item details */
-.add-item-det{margin-top:3px;}
-.add-item-det>summary{list-style:none;display:inline-flex;align-items:center;}
+/* ── Agregar ítem (details) ── */
+.add-item-det{margin-top:6px;}
+.add-item-det>summary{list-style:none;display:inline-flex;}
 .add-item-det>summary::-webkit-details-marker,.add-item-det>summary::marker{display:none;}
-.add-item-body{padding:8px 8px 8px 0;margin-top:4px;}
+.add-item-body{padding:8px 0 2px;}
+.add-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
 
-/* Delete cat */
-.delete-cat-form{display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding-top:8px;margin-top:4px;border-top:1px dashed var(--bd2);}
+/* ── Eliminar categoría ── */
+.delete-cat-form{display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding-top:10px;margin-top:6px;border-top:1px dashed var(--bd2);}
+.del-cat-warn{font-size:11px;color:var(--tx3);flex:1;}
 
-/* Add category — static details element */
+/* ── Agregar categoría (static details) ── */
 .add-cat-det>summary{list-style:none;display:inline-block;}
 .add-cat-det>summary::-webkit-details-marker,.add-cat-det>summary::marker{display:none;}
 .add-cat-wrap{padding:10px;background:var(--bg-inset);border:1px solid var(--bd2);border-radius:var(--r2);margin:8px 0 12px;}
+.add-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
 
 /* Total footer */
 .exp-total-row{display:flex;justify-content:space-between;align-items:center;padding:12px 12px 0;border-top:1px solid var(--bd2);margin-top:10px;}
@@ -271,12 +274,12 @@ input[type="range"].sl::-moz-range-thumb{width:20px;height:20px;border-radius:50
         <form data-mode="add-cat">
           <div class="add-row">
             <input name="label" type="text" placeholder="Nombre de la nueva categoría" required
-              class="modal-input" style="flex:1;min-width:140px;">
-            <select name="scope" class="scope-sel">
-              <option value="this">Solo este mes</option>
-              <option value="all">Todos los meses</option>
+              class="ipt-txt" style="flex:1;min-width:140px;">
+            <select name="scope" class="ipt-scope">
+              <option value="this">Este mes</option>
+              <option value="all">Todos</option>
             </select>
-            <button type="submit" class="btn-save-inline">Crear</button>
+            <button type="submit" class="btn-guardar">Crear</button>
           </div>
         </form>
       </div>
@@ -418,13 +421,23 @@ function getOtherExpenses(mid) {
   return expensesTotal(mid) - getSalTotal(mid);
 }
 
+function isValidExpenses(arr) {
+  return Array.isArray(arr) && arr.length > 0 && arr[0] && arr[0].category && Array.isArray(arr[0].items);
+}
+
 async function loadBin() {
   try {
     const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,
       { headers: { 'X-Master-Key': BIN_KEY } });
     if (r.ok) {
       const d = await r.json();
-      expensesData = d.record || {};
+      const raw = d.record || {};
+      // Descartar cualquier mes con estructura inválida (de versiones anteriores rotas)
+      const clean = {};
+      Object.keys(raw).forEach(function(mid) {
+        if (isValidExpenses(raw[mid])) clean[mid] = raw[mid];
+      });
+      expensesData = clean;
     }
   } catch(e) { console.warn('JSONBin load failed, using defaults'); }
 
@@ -749,9 +762,9 @@ function renderExpensesList(mid, isAll) {
   const openCats = new Set();
   listEl.querySelectorAll('details.exp-cat').forEach(function(el, i) { if (el.open) openCats.add(i); });
 
-  const SCOPES = `<select name="scope" class="scope-sel">
-    <option value="this">Solo este mes</option>
-    <option value="all">Todos los meses</option>
+  const SCOPES = `<select name="scope" class="ipt-scope">
+    <option value="this">Este mes</option>
+    <option value="all">Todos</option>
   </select>`;
 
   listEl.innerHTML = expenses.map(function(cat, ci) {
@@ -764,24 +777,16 @@ function renderExpensesList(mid, isAll) {
   <summary class="exp-item-sum">
     <span class="exp-item-lbl">${escH(item.label)}</span>
     <span class="exp-item-amt">${fmtARS(item.amount)}</span>
-    <span class="exp-edit-hint">✏ editar ▸</span>
+    <span class="exp-edit-hint">✏ editar</span>
   </summary>
   <div class="exp-item-edit-body">
-    <form data-mode="edit-item" data-ci="${ci}" data-ii="${ii}">
-      <div class="edit-row">
-        <input name="label" type="text" value="${escH(item.label)}" required
-          class="modal-input" style="flex:1;min-width:100px;" placeholder="Concepto">
-        <input name="amount" type="number" value="${item.amount}" min="0" step="1" required
-          class="modal-input" style="width:110px;" placeholder="Monto">
+    <form data-mode="item" data-ci="${ci}" data-ii="${ii}">
+      <div class="item-form-row">
+        <input name="label" type="text" value="${escH(item.label)}" required class="ipt-txt" placeholder="Concepto">
+        <input name="amount" type="number" value="${item.amount}" min="0" step="1" required class="ipt-num" placeholder="Monto">
         ${SCOPES}
-        <button type="submit" class="btn-save-inline">Guardar</button>
-      </div>
-    </form>
-    <form data-mode="delete-item" data-ci="${ci}" data-ii="${ii}">
-      <div class="del-row">
-        <span class="del-warn">Eliminar este ítem permanentemente</span>
-        ${SCOPES}
-        <button type="submit" class="btn-del-inline">✕ Eliminar</button>
+        <button type="submit" name="act" value="save" class="btn-guardar">Guardar</button>
+        <button type="submit" name="act" value="delete" class="btn-eliminar" title="Eliminar ítem">✕</button>
       </div>
     </form>
   </div>
@@ -803,20 +808,18 @@ function renderExpensesList(mid, isAll) {
       <div class="add-item-body">
         <form data-mode="add-item" data-ci="${ci}">
           <div class="add-row">
-            <input name="label" type="text" placeholder="Concepto del gasto" required
-              class="modal-input" style="flex:1;min-width:100px;">
-            <input name="amount" type="number" placeholder="Monto $" min="0" step="1" required
-              class="modal-input" style="width:110px;">
+            <input name="label" type="text" placeholder="Concepto del gasto" required class="ipt-txt">
+            <input name="amount" type="number" placeholder="Monto $" min="0" step="1" required class="ipt-num">
             ${SCOPES}
-            <button type="submit" class="btn-save-inline">+ Agregar</button>
+            <button type="submit" class="btn-guardar">+ Agregar</button>
           </div>
         </form>
       </div>
     </details>
     <form data-mode="delete-cat" data-ci="${ci}" class="delete-cat-form">
-      <span class="del-warn">Eliminar categoría completa (${cat.items.length} ítems)</span>
+      <span class="del-cat-warn">Eliminar categoría completa (${cat.items.length} ítems)</span>
       ${SCOPES}
-      <button type="submit" class="btn-del-inline">✕ Eliminar categoría</button>
+      <button type="submit" class="btn-eliminar">✕ Eliminar categoría</button>
     </form>
   </div>
 </details>`;
@@ -844,63 +847,91 @@ document.addEventListener('submit', async function(e) {
   var scope = (scopeEl && scopeEl.value) ? scopeEl.value : 'this';
   var targets = (scope === 'all') ? MONTHS.map(function(m) { return m.id; }) : [workingMonthId];
 
-  var btn = form.querySelector('button[type="submit"]');
+  var btn = e.submitter || form.querySelector('button[type="submit"]');
   var origText = btn ? btn.textContent : '';
   if (btn) { btn.disabled = true; btn.textContent = '…'; }
 
   var badge = document.getElementById('exp-sync-badge');
 
   function ensureMid(mid) {
-    if (!expensesData[mid]) expensesData[mid] = cloneExpenses(DEFAULT_EXPENSES);
+    if (!isValidExpenses(expensesData[mid])) expensesData[mid] = cloneExpenses(DEFAULT_EXPENSES);
+  }
+  function restoreBtn() {
+    if (btn) { try { btn.disabled = false; btn.textContent = origText; } catch(ex) {} }
   }
 
+  // ── 1. APLICAR CAMBIO EN MEMORIA + ACTUALIZAR PANTALLA ───
+  var needsFullRender = true;
+
+  try {
+
   if (mode === 'add-cat') {
-    var label = form.elements.label.value.trim();
-    if (!label) {
-      if (btn) { btn.disabled = false; btn.textContent = origText; }
-      return;
-    }
+    var newLabel = form.elements.label.value.trim();
+    if (!newLabel) { restoreBtn(); return; }
     targets.forEach(function(mid) {
       ensureMid(mid);
-      expensesData[mid].push({ category: label, items: [] });
+      expensesData[mid].push({ category: newLabel, items: [] });
     });
     form.reset();
     var det = document.getElementById('add-cat-det');
     if (det) det.open = false;
 
   } else if (mode === 'add-item') {
-    var label = form.elements.label.value.trim();
-    var amount = parseInt(form.elements.amount.value, 10);
-    if (!label || isNaN(amount) || amount < 0) {
-      if (btn) { btn.disabled = false; btn.textContent = origText; }
-      return;
-    }
+    var newLabel = form.elements.label.value.trim();
+    var newAmount = parseInt(form.elements.amount.value, 10);
+    if (!newLabel || isNaN(newAmount) || newAmount < 0) { restoreBtn(); return; }
     targets.forEach(function(mid) {
       ensureMid(mid);
-      expensesData[mid][ci].items.push({ label: label, amount: amount });
+      expensesData[mid][ci].items.push({ label: newLabel, amount: newAmount });
     });
-    // Cerrar el details de add-item
     var addDet = form.closest('details');
     if (addDet) addDet.open = false;
     form.reset();
 
-  } else if (mode === 'edit-item') {
-    var label = form.elements.label.value.trim();
-    var amount = parseInt(form.elements.amount.value, 10);
-    if (!label || isNaN(amount) || amount < 0) {
-      if (btn) { btn.disabled = false; btn.textContent = origText; }
-      return;
-    }
-    targets.forEach(function(mid) {
-      ensureMid(mid);
-      expensesData[mid][ci].items[ii] = { label: label, amount: amount };
-    });
+  } else if (mode === 'item') {
+    var act = (btn && btn.value) ? btn.value : 'save';
 
-  } else if (mode === 'delete-item') {
-    targets.forEach(function(mid) {
-      ensureMid(mid);
-      expensesData[mid][ci].items.splice(ii, 1);
-    });
+    if (act === 'save') {
+      var newLabel = form.elements.label.value.trim();
+      var newAmount = parseInt(form.elements.amount.value, 10);
+      if (!newLabel || isNaN(newAmount) || newAmount < 0) { restoreBtn(); return; }
+
+      // Actualizar datos en memoria
+      targets.forEach(function(mid) {
+        ensureMid(mid);
+        expensesData[mid][ci].items[ii] = { label: newLabel, amount: newAmount };
+      });
+
+      // ── Actualización quirúrgica del DOM ──
+      var itemDet = form.closest('details.exp-item-det');
+      if (itemDet) {
+        var lbl = itemDet.querySelector('.exp-item-lbl');
+        var amt = itemDet.querySelector('.exp-item-amt');
+        if (lbl) lbl.textContent = newLabel;
+        if (amt) amt.textContent = fmtARS(newAmount);
+        itemDet.open = false;
+      }
+      // Actualizar total de categoría
+      var catDet = form.closest('details.exp-cat');
+      if (catDet) {
+        var catTotalEl = catDet.querySelector('.exp-cat-total');
+        if (catTotalEl) {
+          var expNow = getExpenses(workingMonthId);
+          if (expNow[ci]) catTotalEl.textContent = fmtARS(catTotal(expNow[ci]));
+        }
+      }
+      // Actualizar total general
+      var grandTotal = document.querySelector('#exp-total-row .exp-total-amt');
+      if (grandTotal) grandTotal.textContent = fmtARS(expensesTotal(workingMonthId));
+
+      needsFullRender = false;
+
+    } else if (act === 'delete') {
+      targets.forEach(function(mid) {
+        ensureMid(mid);
+        expensesData[mid][ci].items.splice(ii, 1);
+      });
+    }
 
   } else if (mode === 'delete-cat') {
     targets.forEach(function(mid) {
@@ -909,22 +940,39 @@ document.addEventListener('submit', async function(e) {
     });
   }
 
-  // Guardar en JSONBin
-  if (badge) { badge.textContent = 'guardando…'; badge.className = 'exp-sync-badge exp-sync-loading'; }
-  try {
-    await saveBin();
-    if (badge) { badge.textContent = '✓ guardado'; badge.className = 'exp-sync-badge exp-sync-ok'; }
-  } catch (err) {
-    console.warn('Save failed:', err);
-    if (badge) { badge.textContent = '⚠ error al guardar'; badge.className = 'exp-sync-badge'; }
-    if (btn) { btn.disabled = false; btn.textContent = origText; }
+  } catch (dataErr) {
+    console.error('Error al actualizar datos:', dataErr);
+    // Resetear meses afectados y forzar re-render completo
+    targets.forEach(function(mid) { expensesData[mid] = cloneExpenses(DEFAULT_EXPENSES); });
+    needsFullRender = true;
+    restoreBtn();
+    if (badge) { badge.textContent = '⚠ datos reseteados'; badge.className = 'exp-sync-badge'; }
+    MONTHS.forEach(function(m) { m.net = m.ganancia - m.mlCosts - expensesTotal(m.id); });
+    selectPeriod(currentId);
     return;
   }
 
+  // ── 2. RE-RENDERIZAR (solo si hubo cambio estructural) ───
   MONTHS.forEach(function(m) { m.net = m.ganancia - m.mlCosts - expensesTotal(m.id); });
   updateScChart();
   updateSim();
-  selectPeriod(currentId);
+  if (needsFullRender) {
+    selectPeriod(currentId);
+  }
+  restoreBtn();
+
+  // ── 3. GUARDAR EN JSONBIN EN BACKGROUND ──────────────────
+  if (badge) { badge.textContent = 'guardando…'; badge.className = 'exp-sync-badge exp-sync-loading'; }
+  try {
+    await Promise.race([
+      saveBin(),
+      new Promise(function(_, rej) { setTimeout(function() { rej(new Error('timeout')); }, 8000); })
+    ]);
+    if (badge) { badge.textContent = '✓ guardado'; badge.className = 'exp-sync-badge exp-sync-ok'; }
+  } catch (err) {
+    console.warn('Save failed:', err);
+    if (badge) { badge.textContent = '⚠ sin sincronizar'; badge.className = 'exp-sync-badge'; }
+  }
 });
 
 // ══════════════════════════════════════════════════════
